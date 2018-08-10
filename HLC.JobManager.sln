@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2018
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlcJobCommon", "src\HlcJobCommon\HlcJobCommon.csproj", "{96893AA8-0C0F-4290-8EA8-E3B8AB5D586E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlcJobManager", "src\HlcJobManager\HlcJobManager.csproj", "{07DDA210-1292-47D9-B856-B20B573778DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HlcJobService", "src\HlcJobService\HlcJobService.csproj", "{D3A26475-0CC0-428F-BBBA-1531C6CB5BB4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestJobs", "TestJobs", "{4A626469-BA10-4C40-B75F-ACD78A347986}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DllJob", "src\TestJobs\DllJob\DllJob.csproj", "{48A82EB4-E424-4EE6-83D8-029DED2A160C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExeJob", "src\TestJobs\ExeJob\ExeJob.csproj", "{72B86273-71D1-4AF8-9EA8-FBC9A90C4867}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{96893AA8-0C0F-4290-8EA8-E3B8AB5D586E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96893AA8-0C0F-4290-8EA8-E3B8AB5D586E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96893AA8-0C0F-4290-8EA8-E3B8AB5D586E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96893AA8-0C0F-4290-8EA8-E3B8AB5D586E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07DDA210-1292-47D9-B856-B20B573778DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07DDA210-1292-47D9-B856-B20B573778DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07DDA210-1292-47D9-B856-B20B573778DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07DDA210-1292-47D9-B856-B20B573778DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3A26475-0CC0-428F-BBBA-1531C6CB5BB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3A26475-0CC0-428F-BBBA-1531C6CB5BB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3A26475-0CC0-428F-BBBA-1531C6CB5BB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3A26475-0CC0-428F-BBBA-1531C6CB5BB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48A82EB4-E424-4EE6-83D8-029DED2A160C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48A82EB4-E424-4EE6-83D8-029DED2A160C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48A82EB4-E424-4EE6-83D8-029DED2A160C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48A82EB4-E424-4EE6-83D8-029DED2A160C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72B86273-71D1-4AF8-9EA8-FBC9A90C4867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72B86273-71D1-4AF8-9EA8-FBC9A90C4867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72B86273-71D1-4AF8-9EA8-FBC9A90C4867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72B86273-71D1-4AF8-9EA8-FBC9A90C4867}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{48A82EB4-E424-4EE6-83D8-029DED2A160C} = {4A626469-BA10-4C40-B75F-ACD78A347986}
+		{72B86273-71D1-4AF8-9EA8-FBC9A90C4867} = {4A626469-BA10-4C40-B75F-ACD78A347986}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EFF11C14-1BF1-4B3D-A657-3EEFBD80B1DA}
+	EndGlobalSection
+EndGlobal
