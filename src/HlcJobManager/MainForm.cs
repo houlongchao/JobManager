@@ -57,18 +57,7 @@ namespace HlcJobManager
             lb_version.Text = ProductVersion;
 
             _jobManagerProxy = new JobManagerProxy();
-
-            dgv_data.SelectionChanged += (sender, args) =>
-            {
-                var selectedJob = SelectedJob;
-                if (selectedJob == null)
-                {
-                    txt_log.Text = "";
-                    return;
-                }
-                ShowLog(selectedJob.Id);
-            };
-
+            
             TimerUtil.StartTimer("status_monitor", 5000, RefreshServerStatus);
         }
 
@@ -236,12 +225,17 @@ namespace HlcJobManager
 
             try
             {
-                RefreshJobView();
+                RefreshJobView(SelectedJob?.Id);
             }
             catch (EndpointNotFoundException)
             {
                 MessageBox.Show("刷新出错", "提示", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
+        }
+
+        private void btn_jobEnable_Click(object sender, EventArgs e)
+        {
+            SwitchJobEnable(SelectedJob);
         }
 
         #endregion Job Button Event
@@ -292,11 +286,7 @@ namespace HlcJobManager
 
                     menu.MenuItems.Add(job.Enable ? "禁用" : "启用", (o, args) =>
                     {
-                        AsyncUtil.Run(() =>
-                        {
-                            var b = job.Enable ? _jobManagerProxy.DisableJob(job.Id) : _jobManagerProxy.EnableJob(job.Id);
-                        });
-
+                        SwitchJobEnable(job);
                     });
 
                     menu.Show(dgv_data, new Point(cellLocation.X + e.X, cellLocation.Y + e.Y));
@@ -318,10 +308,19 @@ namespace HlcJobManager
             EditJobRow(row);
         }
 
+        private void dgv_data_SelectionChanged(object sender, EventArgs e)
+        {
+            var selectedJob = SelectedJob;
+
+            RefreshEnableBtn(selectedJob);
+
+            ShowLog(selectedJob);
+        }
+
         #endregion DataGridView Event
 
         #region DataGridView
-        
+
         private void RefreshJobView(string selectedId = null)
         {
             lock (this)
@@ -379,6 +378,8 @@ namespace HlcJobManager
 
         private void UpdateJob(ManageJob job)
         {
+            RefreshEnableBtn(job);
+
             foreach (DataGridViewRow row in dgv_data.Rows)
             {
                 if (row.Cells["cln_id"].Value.Equals(job.Id))
@@ -454,26 +455,38 @@ namespace HlcJobManager
             var selectedJob = SelectedJob;
             if (selectedJob != null && selectedJob.Id.Equals(jobId))
             {
-                ShowLog(jobId);
+                ShowLog(selectedJob);
             }
         }
 
-        private void ShowLog(string jobId)
+        private void ShowLog(ManageJob job)
         {
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(() => ShowLog(jobId)));
+                Invoke(new MethodInvoker(() => ShowLog(job)));
                 return;
             }
 
+            if (job == null)
+            {
+                txt_log.Text = "";
+                return;
+            }
+
+            var jobId = job.Id;
+
             if (!_logDict.ContainsKey(jobId))
             {
-                var chacheLog = _jobManagerProxy.GetChacheLog(jobId);
-                _logDict[jobId] = new Queue<string>();
-                foreach (var log in chacheLog)
+                AsyncUtil.Run(() =>
                 {
-                    _logDict[jobId].Enqueue(log);
-                }
+                    var chacheLog = _jobManagerProxy.GetChacheLog(jobId);
+                    _logDict[jobId] = new Queue<string>();
+                    foreach (var log in chacheLog)
+                    {
+                        _logDict[jobId].Enqueue(log);
+                    }
+                }, () => ShowLog(job));
+                return;
             }
 
             var logs = _logDict[jobId];
@@ -501,7 +514,7 @@ namespace HlcJobManager
                 RefreshStatusMsgByServerStatus(ServerStatus.Null);
                 RefreshServerControlBtn(ServerStatus.Null);
 
-                dgv_data.Rows.Clear();
+                ClearDgv();
                 return;
             }
 
@@ -531,7 +544,7 @@ namespace HlcJobManager
                 RefreshStatusMsgByServerStatus(ServerStatus.Stoped);
                 RefreshServerControlBtn(ServerStatus.Stoped);
 
-                dgv_data.Rows.Clear();
+                ClearDgv();
                 return;
             }
 
@@ -547,7 +560,7 @@ namespace HlcJobManager
                 RefreshStatusMsgByServerStatus(ServerStatus.Stoped);
                 RefreshServerControlBtn(ServerStatus.Stoped);
 
-                dgv_data.Rows.Clear();
+                ClearDgv();
                 return;
             }
 
@@ -556,13 +569,19 @@ namespace HlcJobManager
                 RefreshStatusMsgByServerStatus(ServerStatus.PausePending);
                 RefreshServerControlBtn(ServerStatus.PausePending);
 
-                dgv_data.Rows.Clear();
+                ClearDgv();
                 return;
             }
         }
 
         private void RefreshServerControlBtn(ServerStatus status)
         {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new MethodInvoker(() => RefreshServerControlBtn(status)));
+                return;
+            }
+
             switch (status)
             {
                 case ServerStatus.Null:
@@ -664,12 +683,51 @@ namespace HlcJobManager
         {
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(() => { RefreshStatusMsg(msg); }));
+                Invoke(new MethodInvoker(() => RefreshStatusMsg(msg)));
                 return;
             }
             Text = $"{_title}（{msg}）";
         }
 
+        private void RefreshEnableBtn(ManageJob job)
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new MethodInvoker(() => RefreshEnableBtn(job)));
+                return;
+            }
+            if (job == null)
+            {
+                btn_jobEnable.Enabled = false;
+                return;
+            }
+            btn_jobEnable.Enabled = true;
+            btn_jobEnable.Text = job.Enable ? "禁用任务" : "启用任务";
+        }
+
+        private void ClearDgv()
+        {
+            if (InvokeRequired)
+            {
+                BeginInvoke(new MethodInvoker(ClearDgv));
+                return;
+            }
+
+            dgv_data.Rows.Clear();
+        }
+
+        private void SwitchJobEnable(ManageJob job)
+        {
+            if (job == null)
+            {
+                return;
+            }
+
+            AsyncUtil.Run(() =>
+            {
+                var result = job.Enable ? _jobManagerProxy.DisableJob(job.Id) : _jobManagerProxy.EnableJob(job.Id);
+            });
+        }
         #endregion
     }
 

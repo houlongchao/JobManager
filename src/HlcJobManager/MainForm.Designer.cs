@@ -48,13 +48,14 @@
             this.btn_addJob = new System.Windows.Forms.Button();
             this.btn_viewLog = new System.Windows.Forms.Button();
             this.gbx_logTool = new System.Windows.Forms.GroupBox();
+            this.btn_clearLog = new System.Windows.Forms.Button();
             this.gbx_serviceTool = new System.Windows.Forms.GroupBox();
             this.btn_uninstallSvc = new System.Windows.Forms.Button();
             this.btn_stopSvc = new System.Windows.Forms.Button();
             this.btn_startSvc = new System.Windows.Forms.Button();
             this.btn_installSvc = new System.Windows.Forms.Button();
             this.lb_version = new System.Windows.Forms.Label();
-            this.btn_clearLog = new System.Windows.Forms.Button();
+            this.btn_jobEnable = new System.Windows.Forms.Button();
             this.pl_main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spl_main)).BeginInit();
             this.spl_main.Panel1.SuspendLayout();
@@ -124,6 +125,7 @@
             this.dgv_data.TabIndex = 0;
             this.dgv_data.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_data_CellDoubleClick);
             this.dgv_data.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgv_data_CellMouseClick);
+            this.dgv_data.SelectionChanged += new System.EventHandler(this.dgv_data_SelectionChanged);
             // 
             // cln_id
             // 
@@ -195,13 +197,14 @@
             // gbx_jobTool
             // 
             this.gbx_jobTool.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbx_jobTool.Controls.Add(this.btn_jobEnable);
             this.gbx_jobTool.Controls.Add(this.btn_refreshJobs);
             this.gbx_jobTool.Controls.Add(this.btn_delJob);
             this.gbx_jobTool.Controls.Add(this.btn_editJob);
             this.gbx_jobTool.Controls.Add(this.btn_addJob);
             this.gbx_jobTool.Location = new System.Drawing.Point(661, 167);
             this.gbx_jobTool.Name = "gbx_jobTool";
-            this.gbx_jobTool.Size = new System.Drawing.Size(115, 152);
+            this.gbx_jobTool.Size = new System.Drawing.Size(115, 175);
             this.gbx_jobTool.TabIndex = 1;
             this.gbx_jobTool.TabStop = false;
             this.gbx_jobTool.Text = "任务控制栏";
@@ -220,7 +223,7 @@
             // btn_delJob
             // 
             this.btn_delJob.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_delJob.Location = new System.Drawing.Point(22, 112);
+            this.btn_delJob.Location = new System.Drawing.Point(21, 140);
             this.btn_delJob.Name = "btn_delJob";
             this.btn_delJob.Size = new System.Drawing.Size(75, 23);
             this.btn_delJob.TabIndex = 0;
@@ -231,7 +234,7 @@
             // btn_editJob
             // 
             this.btn_editJob.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_editJob.Location = new System.Drawing.Point(22, 83);
+            this.btn_editJob.Location = new System.Drawing.Point(21, 111);
             this.btn_editJob.Name = "btn_editJob";
             this.btn_editJob.Size = new System.Drawing.Size(75, 23);
             this.btn_editJob.TabIndex = 0;
@@ -242,7 +245,7 @@
             // btn_addJob
             // 
             this.btn_addJob.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_addJob.Location = new System.Drawing.Point(22, 54);
+            this.btn_addJob.Location = new System.Drawing.Point(21, 82);
             this.btn_addJob.Name = "btn_addJob";
             this.btn_addJob.Size = new System.Drawing.Size(75, 23);
             this.btn_addJob.TabIndex = 0;
@@ -267,12 +270,23 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.gbx_logTool.Controls.Add(this.btn_clearLog);
             this.gbx_logTool.Controls.Add(this.btn_viewLog);
-            this.gbx_logTool.Location = new System.Drawing.Point(660, 328);
+            this.gbx_logTool.Location = new System.Drawing.Point(660, 348);
             this.gbx_logTool.Name = "gbx_logTool";
-            this.gbx_logTool.Size = new System.Drawing.Size(115, 131);
+            this.gbx_logTool.Size = new System.Drawing.Size(115, 111);
             this.gbx_logTool.TabIndex = 2;
             this.gbx_logTool.TabStop = false;
             this.gbx_logTool.Text = "日志控制栏";
+            // 
+            // btn_clearLog
+            // 
+            this.btn_clearLog.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_clearLog.Location = new System.Drawing.Point(22, 49);
+            this.btn_clearLog.Name = "btn_clearLog";
+            this.btn_clearLog.Size = new System.Drawing.Size(75, 23);
+            this.btn_clearLog.TabIndex = 0;
+            this.btn_clearLog.Text = "清空日志";
+            this.btn_clearLog.UseVisualStyleBackColor = true;
+            this.btn_clearLog.Click += new System.EventHandler(this.btn_clearLog_Click);
             // 
             // gbx_serviceTool
             // 
@@ -343,16 +357,16 @@
             this.lb_version.Text = "1.0.0.0";
             this.lb_version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btn_clearLog
+            // btn_jobEnable
             // 
-            this.btn_clearLog.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_clearLog.Location = new System.Drawing.Point(22, 49);
-            this.btn_clearLog.Name = "btn_clearLog";
-            this.btn_clearLog.Size = new System.Drawing.Size(75, 23);
-            this.btn_clearLog.TabIndex = 0;
-            this.btn_clearLog.Text = "清空日志";
-            this.btn_clearLog.UseVisualStyleBackColor = true;
-            this.btn_clearLog.Click += new System.EventHandler(this.btn_clearLog_Click);
+            this.btn_jobEnable.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_jobEnable.Location = new System.Drawing.Point(21, 52);
+            this.btn_jobEnable.Name = "btn_jobEnable";
+            this.btn_jobEnable.Size = new System.Drawing.Size(75, 23);
+            this.btn_jobEnable.TabIndex = 0;
+            this.btn_jobEnable.Text = "启用任务";
+            this.btn_jobEnable.UseVisualStyleBackColor = true;
+            this.btn_jobEnable.Click += new System.EventHandler(this.btn_jobEnable_Click);
             // 
             // MainForm
             // 
@@ -412,6 +426,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_state;
         private System.Windows.Forms.Label lb_version;
         private System.Windows.Forms.Button btn_clearLog;
+        private System.Windows.Forms.Button btn_jobEnable;
     }
 }
 
