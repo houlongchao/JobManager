@@ -153,7 +153,7 @@
             this.txt_className.Location = new System.Drawing.Point(349, 131);
             this.txt_className.Name = "txt_className";
             this.txt_className.Size = new System.Drawing.Size(141, 21);
-            this.txt_className.TabIndex = 6;
+            this.txt_className.TabIndex = 7;
             // 
             // lb_methodName
             // 
@@ -171,7 +171,7 @@
             this.txt_methodName.Location = new System.Drawing.Point(349, 163);
             this.txt_methodName.Name = "txt_methodName";
             this.txt_methodName.Size = new System.Drawing.Size(141, 21);
-            this.txt_methodName.TabIndex = 7;
+            this.txt_methodName.TabIndex = 8;
             // 
             // dgv_params
             // 
@@ -203,10 +203,10 @@
             // btn_cancel
             // 
             this.btn_cancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_cancel.Location = new System.Drawing.Point(409, 230);
+            this.btn_cancel.Location = new System.Drawing.Point(415, 230);
             this.btn_cancel.Name = "btn_cancel";
             this.btn_cancel.Size = new System.Drawing.Size(75, 23);
-            this.btn_cancel.TabIndex = 8;
+            this.btn_cancel.TabIndex = 9;
             this.btn_cancel.Text = "取消";
             this.btn_cancel.UseVisualStyleBackColor = true;
             this.btn_cancel.Click += new System.EventHandler(this.btn_cancel_Click);
@@ -214,10 +214,10 @@
             // btn_ok
             // 
             this.btn_ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_ok.Location = new System.Drawing.Point(306, 230);
+            this.btn_ok.Location = new System.Drawing.Point(312, 230);
             this.btn_ok.Name = "btn_ok";
             this.btn_ok.Size = new System.Drawing.Size(75, 23);
-            this.btn_ok.TabIndex = 9;
+            this.btn_ok.TabIndex = 10;
             this.btn_ok.Text = "确定";
             this.btn_ok.UseVisualStyleBackColor = true;
             this.btn_ok.Click += new System.EventHandler(this.btn_ok_Click);
@@ -236,7 +236,7 @@
             this.txt_workPath.Location = new System.Drawing.Point(91, 103);
             this.txt_workPath.Name = "txt_workPath";
             this.txt_workPath.Size = new System.Drawing.Size(399, 21);
-            this.txt_workPath.TabIndex = 5;
+            this.txt_workPath.TabIndex = 6;
             // 
             // JobEditForm
             // 

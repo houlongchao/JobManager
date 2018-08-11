@@ -53,6 +53,8 @@
             this.btn_stopSvc = new System.Windows.Forms.Button();
             this.btn_startSvc = new System.Windows.Forms.Button();
             this.btn_installSvc = new System.Windows.Forms.Button();
+            this.lb_version = new System.Windows.Forms.Label();
+            this.btn_clearLog = new System.Windows.Forms.Button();
             this.pl_main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spl_main)).BeginInit();
             this.spl_main.Panel1.SuspendLayout();
@@ -203,7 +205,6 @@
             this.gbx_jobTool.TabIndex = 1;
             this.gbx_jobTool.TabStop = false;
             this.gbx_jobTool.Text = "任务控制栏";
-            this.gbx_jobTool.Enter += new System.EventHandler(this.gbx_jobTool_Enter);
             // 
             // btn_refreshJobs
             // 
@@ -264,10 +265,11 @@
             // 
             this.gbx_logTool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbx_logTool.Controls.Add(this.btn_clearLog);
             this.gbx_logTool.Controls.Add(this.btn_viewLog);
             this.gbx_logTool.Location = new System.Drawing.Point(660, 328);
             this.gbx_logTool.Name = "gbx_logTool";
-            this.gbx_logTool.Size = new System.Drawing.Size(115, 157);
+            this.gbx_logTool.Size = new System.Drawing.Size(115, 131);
             this.gbx_logTool.TabIndex = 2;
             this.gbx_logTool.TabStop = false;
             this.gbx_logTool.Text = "日志控制栏";
@@ -330,11 +332,34 @@
             this.btn_installSvc.UseVisualStyleBackColor = true;
             this.btn_installSvc.Click += new System.EventHandler(this.btn_installSvc_Click);
             // 
+            // lb_version
+            // 
+            this.lb_version.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lb_version.ForeColor = System.Drawing.SystemColors.ControlDark;
+            this.lb_version.Location = new System.Drawing.Point(659, 462);
+            this.lb_version.Name = "lb_version";
+            this.lb_version.Size = new System.Drawing.Size(117, 20);
+            this.lb_version.TabIndex = 0;
+            this.lb_version.Text = "1.0.0.0";
+            this.lb_version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btn_clearLog
+            // 
+            this.btn_clearLog.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_clearLog.Location = new System.Drawing.Point(22, 49);
+            this.btn_clearLog.Name = "btn_clearLog";
+            this.btn_clearLog.Size = new System.Drawing.Size(75, 23);
+            this.btn_clearLog.TabIndex = 0;
+            this.btn_clearLog.Text = "清空日志";
+            this.btn_clearLog.UseVisualStyleBackColor = true;
+            this.btn_clearLog.Click += new System.EventHandler(this.btn_clearLog_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 491);
+            this.Controls.Add(this.lb_version);
             this.Controls.Add(this.gbx_serviceTool);
             this.Controls.Add(this.gbx_logTool);
             this.Controls.Add(this.gbx_jobTool);
@@ -385,6 +410,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_nextTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_enable;
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_state;
+        private System.Windows.Forms.Label lb_version;
+        private System.Windows.Forms.Button btn_clearLog;
     }
 }
 

@@ -1,9 +1,11 @@
 ﻿using System;
+using System.IO;
 using System.ServiceModel;
 using System.Windows.Forms;
 using HlcJobCommon;
 using HlcJobCommon.Wcf;
 using HlcJobManager.Wcf;
+using HLC.Common.Utils;
 
 namespace HlcJobManager
 {
@@ -12,7 +14,7 @@ namespace HlcJobManager
         private JobManagerProxy _jobManagerProxy;
         private ManageJob _job;
 
-        public string JobName { get; set; }
+        public string JobId { get; set; }
 
         public JobEditForm()
         {
@@ -37,6 +39,7 @@ namespace HlcJobManager
             txt_cron.Text = job.Cron;
             cmb_enable.Text = job.Enable ? "启用" : "禁用";
             txt_filePath.Text = job.FilePath;
+            txt_workPath.Text = job.WorkPath;
             txt_className.Text = job.ClassName;
             txt_methodName.Text = job.MethodName;
             foreach (var param in job.Params)
@@ -59,11 +62,11 @@ namespace HlcJobManager
             
             var job = GetJob();
 
-            try
+            AsyncUtil.Run(() =>
             {
                 if (_job == null ? _jobManagerProxy.AddJob(job) : _jobManagerProxy.UpdateJob(job))
                 {
-                    JobName = job.Name;
+                    JobId = job.Id;
 
                     DialogResult = DialogResult.OK;
                 }
@@ -71,22 +74,46 @@ namespace HlcJobManager
                 {
                     DialogResult = DialogResult.Cancel;
                 }
-            }
-            catch (EndpointNotFoundException)
+            }, exception: ex =>
             {
-                MessageBox.Show("请先安装服务", "提示", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 DialogResult = DialogResult.Cancel;
-            }
+            });
+            //try
+            //{
+            //    if (_job == null ? _jobManagerProxy.AddJob(job) : _jobManagerProxy.UpdateJob(job))
+            //    {
+            //        JobId = job.Name;
+
+            //        DialogResult = DialogResult.OK;
+            //    }
+            //    else
+            //    {
+            //        DialogResult = DialogResult.Cancel;
+            //    }
+            //}
+            //catch (EndpointNotFoundException)
+            //{
+            //    MessageBox.Show("请先安装服务", "提示", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            //    DialogResult = DialogResult.Cancel;
+            //}
             
         }
 
         private bool CheckFormData()
         {
             var cron = txt_cron.Text;
+            var workDir = txt_workPath.Text;
+
             var cronItems = cron.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
             if (!(cron.Equals(Constant.ServerCron)  || cronItems.Length == 6 || cronItems.Length == 7))
             {
                 MessageBox.Show("调度计划格式有误，必须为6位或7位,或一次性服务任务'-'");
+                return false;
+            }
+
+            if (txt_workPath.Visible && !string.IsNullOrEmpty(workDir) && !Directory.Exists(workDir))
+            {
+                MessageBox.Show("工作目录不存在");
                 return false;
             }
 

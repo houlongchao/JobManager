@@ -114,7 +114,7 @@ namespace HlcJobService.Wcf
                 JobManager.Instance.Jobs.Remove(job);
 
                 JobManager.Instance.SaveJobs();
-                JobManager.Instance.UpdateScheduler(job.Id);
+                JobManager.Instance.DeleteJob(job.Id);
 
                 _logger.Info($"移除任务【{jobId}】成功");
                 JobManager.Instance.NotifyClientLog(jobId, $"移除任务成功");
@@ -154,7 +154,7 @@ namespace HlcJobService.Wcf
                 JobManager.Instance.SaveJobs();
                 JobManager.Instance.UpdateScheduler(job.Id);
 
-                _logger.Info($"添加的任务【{job.Id}】成功");
+                _logger.Info($"添加任务【{job.Id}】成功");
                 JobManager.Instance.NotifyClientLog(job.Id, $"添加的任务成功");
 
                 return true;
@@ -183,7 +183,7 @@ namespace HlcJobService.Wcf
                 if (jobIndex < 0)
                 {
                     _logger.Warn($"更新任务【{job.Id}】失败, 未找到需要更新的任务【{job.Id}】");
-                    JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务【{job.Name}】失败, 未找到需要更新的任务【{job.Name}】");
+                    JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务失败, 未找到需要更新的任务");
                     return false;
                 }
 
@@ -193,14 +193,14 @@ namespace HlcJobService.Wcf
                 JobManager.Instance.UpdateScheduler(job.Id);
 
                 _logger.Info($"更新任务【{job.Id}】成功");
-                JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务【{job.Name}】成功");
+                JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务成功");
 
                 return true;
             }
             catch (Exception e)
             {
                 _logger.Error(e, $"更新任务【{job?.Id}】出错");
-                JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务【{job?.Name}】出错，{e.Message}");
+                JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务出错，{e.Message}");
                 return false;
             }
         }
@@ -228,7 +228,7 @@ namespace HlcJobService.Wcf
                     JobManager.Instance.InvokeJob(job);
                 }
 
-                JobManager.Instance.NotifyClientLog(jobId, $"执行任务【{job.Name}】成功");
+                JobManager.Instance.NotifyClientLog(jobId, $"执行任务成功");
 
                 return true;
             }

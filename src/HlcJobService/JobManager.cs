@@ -277,7 +277,6 @@ namespace HlcJobService
             process.Start();
             process.BeginOutputReadLine();
             process.BeginErrorReadLine();
-            _processDict[job.Id] = process;
             process.WaitForExit();
 
             NotifyClientLog(job.Id, $"================= CMD任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
@@ -664,6 +663,11 @@ namespace HlcJobService
 
         public void NotifyClientLog(string jobId, string message)
         {
+            if (string.IsNullOrWhiteSpace(message))
+            {
+                return;
+            }
+
             var log = $"[{DateTime.Now:HH:mm:ss.ffff}] | {message}";
             LogCacheManager.Instance.CacheLog(jobId, log);
             ClientLogHandler?.Invoke(jobId, log);
@@ -693,7 +697,7 @@ namespace HlcJobService
             return job;
         }
 
-        private void DeleteJob(string jobId)
+        public void DeleteJob(string jobId)
         {
             _scheduler.DeleteJob(new JobKey(jobId)).Wait();
 
@@ -701,6 +705,7 @@ namespace HlcJobService
             {
                 DynamicUtil.UnloadDomain(_domainDict[jobId]);
                 _domainDict.Remove(jobId);
+                NotifyClientLog(jobId, "停止原有任务");
             }
 
             if (_processDict.ContainsKey(jobId))
@@ -714,6 +719,7 @@ namespace HlcJobService
                     }
                 }
                 _processDict.Remove(jobId);
+                NotifyClientLog(jobId, "停止原有任务");
             }
         }
     }
