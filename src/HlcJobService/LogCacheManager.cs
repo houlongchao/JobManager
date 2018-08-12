@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace HlcJobService
 {
     public class LogCacheManager
     {
+        private const int LOG_SIZE = 100;
+
         private readonly Dictionary<string, Queue<string>> _logDict = new Dictionary<string, Queue<string>>();
 
         private static readonly LogCacheManager _instance = new LogCacheManager();
@@ -16,14 +17,12 @@ namespace HlcJobService
 
         public void CacheLog(string logId, string log)
         {
-            int maxLogSize = 50;
-
             if (!_logDict.ContainsKey(logId))
             {
-                _logDict[logId] = new Queue<string>(maxLogSize);
+                _logDict[logId] = new Queue<string>(LOG_SIZE);
             }
 
-            if (_logDict[logId].Count >= maxLogSize)
+            if (_logDict[logId].Count >= LOG_SIZE)
             {
                 _logDict[logId].Dequeue();
             }

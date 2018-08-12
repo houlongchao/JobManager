@@ -15,6 +15,8 @@ namespace HlcJobManager
 {
     public partial class MainForm : Form
     {
+        private const int LOG_SIZE = 300;
+
         private readonly JobManagerProxy _jobManagerProxy;
         private readonly Dictionary<string, Queue<string>> _logDict = new Dictionary<string, Queue<string>>();
         private string _title;
@@ -378,19 +380,19 @@ namespace HlcJobManager
 
         private void UpdateJob(ManageJob job)
         {
-            RefreshEnableBtn(job);
-
             foreach (DataGridViewRow row in dgv_data.Rows)
             {
                 if (row.Cells["cln_id"].Value.Equals(job.Id))
                 {
                     UpdateJobRow(row, job);
+                    RefreshEnableBtn(SelectedJob);
                     return;
                 }
             }
             var rowIndex = dgv_data.Rows.Add();
             var newRow = dgv_data.Rows[rowIndex];
             UpdateJobRow(newRow, job);
+            RefreshEnableBtn(SelectedJob);
         }
 
         private void UpdateJobRow(DataGridViewRow row, ManageJob job)
@@ -438,14 +440,12 @@ namespace HlcJobManager
 
         private void AddLog(string jobId, string message)
         {
-            int maxLogSize = 100;
-
             if (!_logDict.ContainsKey(jobId))
             {
-                _logDict[jobId] = new Queue<string>(maxLogSize);
+                _logDict[jobId] = new Queue<string>(LOG_SIZE);
             }
 
-            if (_logDict[jobId].Count >= maxLogSize)
+            if (_logDict[jobId].Count >= LOG_SIZE)
             {
                 _logDict[jobId].Dequeue();
             }
