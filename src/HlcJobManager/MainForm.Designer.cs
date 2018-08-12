@@ -42,6 +42,7 @@
             this.cln_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txt_log = new System.Windows.Forms.TextBox();
             this.gbx_jobTool = new System.Windows.Forms.GroupBox();
+            this.btn_jobEnable = new System.Windows.Forms.Button();
             this.btn_refreshJobs = new System.Windows.Forms.Button();
             this.btn_delJob = new System.Windows.Forms.Button();
             this.btn_editJob = new System.Windows.Forms.Button();
@@ -55,7 +56,6 @@
             this.btn_startSvc = new System.Windows.Forms.Button();
             this.btn_installSvc = new System.Windows.Forms.Button();
             this.lb_version = new System.Windows.Forms.Label();
-            this.btn_jobEnable = new System.Windows.Forms.Button();
             this.pl_main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spl_main)).BeginInit();
             this.spl_main.Panel1.SuspendLayout();
@@ -93,7 +93,6 @@
             // spl_main.Panel2
             // 
             this.spl_main.Panel2.Controls.Add(this.txt_log);
-            this.spl_main.Panel2Collapsed = true;
             this.spl_main.Size = new System.Drawing.Size(641, 476);
             this.spl_main.SplitterDistance = 245;
             this.spl_main.TabIndex = 0;
@@ -121,7 +120,7 @@
             this.dgv_data.RowHeadersVisible = false;
             this.dgv_data.RowTemplate.Height = 23;
             this.dgv_data.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_data.Size = new System.Drawing.Size(641, 476);
+            this.dgv_data.Size = new System.Drawing.Size(641, 245);
             this.dgv_data.TabIndex = 0;
             this.dgv_data.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_data_CellDoubleClick);
             this.dgv_data.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgv_data_CellMouseClick);
@@ -191,7 +190,7 @@
             this.txt_log.Name = "txt_log";
             this.txt_log.ReadOnly = true;
             this.txt_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txt_log.Size = new System.Drawing.Size(150, 46);
+            this.txt_log.Size = new System.Drawing.Size(641, 227);
             this.txt_log.TabIndex = 0;
             // 
             // gbx_jobTool
@@ -208,6 +207,17 @@
             this.gbx_jobTool.TabIndex = 1;
             this.gbx_jobTool.TabStop = false;
             this.gbx_jobTool.Text = "任务控制栏";
+            // 
+            // btn_jobEnable
+            // 
+            this.btn_jobEnable.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btn_jobEnable.Location = new System.Drawing.Point(21, 52);
+            this.btn_jobEnable.Name = "btn_jobEnable";
+            this.btn_jobEnable.Size = new System.Drawing.Size(75, 23);
+            this.btn_jobEnable.TabIndex = 0;
+            this.btn_jobEnable.Text = "启用任务";
+            this.btn_jobEnable.UseVisualStyleBackColor = true;
+            this.btn_jobEnable.Click += new System.EventHandler(this.btn_jobEnable_Click);
             // 
             // btn_refreshJobs
             // 
@@ -260,7 +270,7 @@
             this.btn_viewLog.Name = "btn_viewLog";
             this.btn_viewLog.Size = new System.Drawing.Size(75, 23);
             this.btn_viewLog.TabIndex = 0;
-            this.btn_viewLog.Text = "查看日志";
+            this.btn_viewLog.Text = "隐藏日志";
             this.btn_viewLog.UseVisualStyleBackColor = true;
             this.btn_viewLog.Click += new System.EventHandler(this.btn_viewLog_Click);
             // 
@@ -356,17 +366,6 @@
             this.lb_version.TabIndex = 0;
             this.lb_version.Text = "1.0.0.0";
             this.lb_version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btn_jobEnable
-            // 
-            this.btn_jobEnable.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_jobEnable.Location = new System.Drawing.Point(21, 52);
-            this.btn_jobEnable.Name = "btn_jobEnable";
-            this.btn_jobEnable.Size = new System.Drawing.Size(75, 23);
-            this.btn_jobEnable.TabIndex = 0;
-            this.btn_jobEnable.Text = "启用任务";
-            this.btn_jobEnable.UseVisualStyleBackColor = true;
-            this.btn_jobEnable.Click += new System.EventHandler(this.btn_jobEnable_Click);
             // 
             // MainForm
             // 

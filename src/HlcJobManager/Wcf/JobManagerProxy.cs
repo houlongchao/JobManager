@@ -5,6 +5,9 @@ using HlcJobCommon.Wcf;
 
 namespace HlcJobManager.Wcf
 {
+    /// <summary>
+    /// 任务管理调用代理
+    /// </summary>
     public class JobManagerProxy : IJobManagerService
     {
         private ChannelFactory<IJobManagerService> m_jobManagerFactory;

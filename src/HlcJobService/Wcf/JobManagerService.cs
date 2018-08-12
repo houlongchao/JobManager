@@ -7,6 +7,9 @@ using NLog;
 
 namespace HlcJobService.Wcf
 {
+    /// <summary>
+    /// 任务管理操作实现
+    /// </summary>
     [ServiceBehavior(IncludeExceptionDetailInFaults = true, AutomaticSessionShutdown = true)]
     public class JobManagerService : IJobManagerService
     {

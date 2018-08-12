@@ -1,5 +1,8 @@
 ﻿namespace HlcJobCommon
 {
+    /// <summary>
+    /// 常量
+    /// </summary>
     public class Constant
     {
         /// <summary>

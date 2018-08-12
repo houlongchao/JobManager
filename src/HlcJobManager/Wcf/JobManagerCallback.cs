@@ -4,6 +4,9 @@ using HlcJobCommon.Wcf;
 
 namespace HlcJobManager.Wcf
 {
+    /// <summary>
+    /// 任务管理回调
+    /// </summary>
     [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, UseSynchronizationContext = false)]
     public class JobManagerCallback : IJobManagerCallback
     {

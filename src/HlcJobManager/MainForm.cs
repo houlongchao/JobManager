@@ -10,6 +10,7 @@ using HlcJobCommon;
 using HlcJobCommon.Wcf;
 using HlcJobManager.Wcf;
 using HLC.Common.Utils;
+using NLog;
 
 namespace HlcJobManager
 {
@@ -20,6 +21,7 @@ namespace HlcJobManager
         private readonly JobManagerProxy _jobManagerProxy;
         private readonly Dictionary<string, Queue<string>> _logDict = new Dictionary<string, Queue<string>>();
         private string _title;
+        private ILogger _logger;
 
         /// <summary>
         /// 当前选中的任务
@@ -59,6 +61,7 @@ namespace HlcJobManager
             lb_version.Text = ProductVersion;
 
             _jobManagerProxy = new JobManagerProxy();
+            _logger = NLog.LogManager.GetCurrentClassLogger();
             
             TimerUtil.StartTimer("status_monitor", 5000, RefreshServerStatus);
         }
@@ -79,8 +82,9 @@ namespace HlcJobManager
                     RefreshJobView();
                 }
             }
-            catch (EndpointNotFoundException)
+            catch (EndpointNotFoundException ex)
             {
+                _logger.Error(ex, "未找到服务");
                 MessageBox.Show("未找到服务");
             }
 
@@ -101,7 +105,10 @@ namespace HlcJobManager
             {
                 RefreshStatusMsgByServerStatus(ServerStatus.Installing);
                 DynamicUtil.InvokeCmd("HlcJobService install");
-            }, RefreshServerStatus);
+            }, RefreshServerStatus, exception =>
+            {
+                _logger.Error(exception, "安装服务出错");
+            });
         }
 
         private void btn_startSvc_Click(object sender, EventArgs e)
@@ -126,6 +133,9 @@ namespace HlcJobManager
             {
                 RefreshServerStatus();
                 RefreshJobView();
+            }, exception =>
+            {
+                _logger.Error(exception, "启动服务出错");
             });
         }
 
@@ -146,7 +156,10 @@ namespace HlcJobManager
             {
                 RefreshStatusMsgByServerStatus(ServerStatus.StopPending);
                 DynamicUtil.InvokeCmd("HlcJobService stop");
-            }, RefreshServerStatus);
+            }, RefreshServerStatus, exception =>
+            {
+                _logger.Error(exception, "停止服务出错");
+            });
         }
 
         private void btn_uninstallSvc_Click(object sender, EventArgs e)
@@ -160,7 +173,10 @@ namespace HlcJobManager
             {
                 RefreshStatusMsgByServerStatus(ServerStatus.Uninstalling);
                 DynamicUtil.InvokeCmd("HlcJobService uninstall");
-            }, RefreshServerStatus);
+            }, RefreshServerStatus, exception =>
+            {
+                _logger.Error(exception, "卸载服务出错");
+            });
         }
 
 
@@ -207,6 +223,7 @@ namespace HlcJobManager
                 RefreshJobView();
             }, exception =>
             {
+                _logger.Error(exception, "删除任务出错");
                 RefreshJobView();
             });
         }
@@ -225,14 +242,7 @@ namespace HlcJobManager
                 return;
             }
 
-            try
-            {
-                RefreshJobView(SelectedJob?.Id);
-            }
-            catch (EndpointNotFoundException)
-            {
-                MessageBox.Show("刷新出错", "提示", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
+            RefreshJobView(SelectedJob?.Id);
         }
 
         private void btn_jobEnable_Click(object sender, EventArgs e)
@@ -330,6 +340,9 @@ namespace HlcJobManager
                 AsyncUtil.Run(() => _jobManagerProxy.GetAllJobs(), jobs =>
                 {
                     RefreshJobView(jobs, selectedId);
+                }, exception =>
+                {
+                    _logger.Error(exception, "刷新任务出错");
                 });
             }
         }
@@ -485,7 +498,10 @@ namespace HlcJobManager
                     {
                         _logDict[jobId].Enqueue(log);
                     }
-                }, () => ShowLog(job));
+                }, () => ShowLog(job), exception =>
+                {
+                    _logger.Error(exception, "获取缓存日志出错");
+                });
                 return;
             }
 
@@ -723,10 +739,11 @@ namespace HlcJobManager
                 return;
             }
 
-            AsyncUtil.Run(() =>
-            {
-                var result = job.Enable ? _jobManagerProxy.DisableJob(job.Id) : _jobManagerProxy.EnableJob(job.Id);
-            });
+            AsyncUtil.Run(() => job.Enable ? _jobManagerProxy.DisableJob(job.Id) : _jobManagerProxy.EnableJob(job.Id),
+                result => { }, exception =>
+                {
+                    _logger.Error(exception, "切换任务状态出错");
+                });
         }
         #endregion
     }

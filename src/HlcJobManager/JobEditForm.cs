@@ -1,11 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.ServiceModel;
 using System.Windows.Forms;
 using HlcJobCommon;
 using HlcJobCommon.Wcf;
 using HlcJobManager.Wcf;
 using HLC.Common.Utils;
+using NLog;
 
 namespace HlcJobManager
 {
@@ -13,12 +13,15 @@ namespace HlcJobManager
     {
         private JobManagerProxy _jobManagerProxy;
         private ManageJob _job;
+        private ILogger _logger;
 
         public string JobId { get; set; }
 
         public JobEditForm()
         {
             InitializeComponent();
+
+            _logger = NLog.LogManager.GetCurrentClassLogger();
 
             cmb_type.Items.Add(JobType.DLL);
             cmb_type.Items.Add(JobType.EXE);
@@ -76,27 +79,9 @@ namespace HlcJobManager
                 }
             }, exception: ex =>
             {
+                _logger.Error(ex, "添加或修改任务失败");
                 DialogResult = DialogResult.Cancel;
             });
-            //try
-            //{
-            //    if (_job == null ? _jobManagerProxy.AddJob(job) : _jobManagerProxy.UpdateJob(job))
-            //    {
-            //        JobId = job.Name;
-
-            //        DialogResult = DialogResult.OK;
-            //    }
-            //    else
-            //    {
-            //        DialogResult = DialogResult.Cancel;
-            //    }
-            //}
-            //catch (EndpointNotFoundException)
-            //{
-            //    MessageBox.Show("请先安装服务", "提示", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            //    DialogResult = DialogResult.Cancel;
-            //}
-            
         }
 
         private bool CheckFormData()

@@ -4,6 +4,9 @@ using System.Runtime.Serialization;
 
 namespace HlcJobCommon.Wcf
 {
+    /// <summary>
+    /// 任务
+    /// </summary>
     [DataContract]
     public class ManageJob
     {
@@ -74,6 +77,9 @@ namespace HlcJobCommon.Wcf
         [DataMember] public DateTimeOffset? PreviousFireTime { get; set; }
     }
 
+    /// <summary>
+    /// 任务类型
+    /// </summary>
     [DataContract]
     public enum JobType
     {
@@ -82,6 +88,9 @@ namespace HlcJobCommon.Wcf
         [EnumMember] CMD = 3,
     }
 
+    /// <summary>
+    /// 任务状态
+    /// </summary>
     [DataContract]
     public enum JobState
     {

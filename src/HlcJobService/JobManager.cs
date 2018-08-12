@@ -16,6 +16,9 @@ using Quartz.Impl;
 
 namespace HlcJobService
 {
+    /// <summary>
+    /// 任务管理
+    /// </summary>
     public class JobManager
     {
         private ILogger _logger = LogManager.GetCurrentClassLogger(typeof(JobManager));
@@ -25,7 +28,14 @@ namespace HlcJobService
         private Dictionary<string, DomainProxy> _domainDict = new Dictionary<string, DomainProxy>();
         private Dictionary<string, Process> _processDict = new Dictionary<string, Process>();
 
+        /// <summary>
+        /// 客户端Log处理委托
+        /// </summary>
         public Action<string, string> ClientLogHandler { get; set; }
+
+        /// <summary>
+        /// 客户端任务状态更新处理委托
+        /// </summary>
         public Action<ManageJob> UpdateClientJobHandler { get; set; }
         
         /// <summary>
@@ -95,6 +105,9 @@ namespace HlcJobService
             xmlDoc.Save(Constant.ManageJobsDataFile);
         }
 
+        /// <summary>
+        /// 加载所有任务并开始调度
+        /// </summary>
         public void LoadAllScheduler()
         {
             _scheduler.Clear();
@@ -133,6 +146,10 @@ namespace HlcJobService
             });
         }
 
+        /// <summary>
+        /// 更新指定调度
+        /// </summary>
+        /// <param name="jobId"></param>
         public void UpdateScheduler(string jobId)
         {
             var jobIndex = Jobs.FindIndex(j => j.Id.Equals(jobId));
@@ -143,6 +160,7 @@ namespace HlcJobService
 
             Jobs[jobIndex].State = JobState.None;
 
+            //删除原有指定调度
             DeleteJob(jobId);
 
             var job = Jobs[jobIndex];
@@ -185,6 +203,9 @@ namespace HlcJobService
             }
         }
 
+        /// <summary>
+        /// 停止所有任务调度
+        /// </summary>
         public void StopScheduler()
         {
             foreach (var job in Jobs)
@@ -220,6 +241,10 @@ namespace HlcJobService
             }
         }
 
+        /// <summary>
+        /// 执行Server
+        /// </summary>
+        /// <param name="job"></param>
         public void InvokeServer(ManageJob job)
         {
             switch (job.Type)
@@ -230,7 +255,6 @@ namespace HlcJobService
                 case JobType.EXE:
                     InvokeExeServer(job);
                     break;
-
                 case JobType.CMD:
                     InvokeCmdServer(job);
                     break;
@@ -240,6 +264,10 @@ namespace HlcJobService
             }
         }
 
+        /// <summary>
+        /// 执行CMD任务
+        /// </summary>
+        /// <param name="job"></param>
         private void InvokeCmdJob(ManageJob job)
         {
             NotifyClientLog(job.Id, "================= CMD任务准备运行 =================");
@@ -280,6 +308,10 @@ namespace HlcJobService
             NotifyClientLog(job.Id, $"================= CMD任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
         }
 
+        /// <summary>
+        /// 执行EXE任务
+        /// </summary>
+        /// <param name="job"></param>
         private void InvokeExeJob(ManageJob job)
         {
             NotifyClientLog(job.Id, "================= EXE任务准备运行 =================");
@@ -308,6 +340,10 @@ namespace HlcJobService
             NotifyClientLog(job.Id, $"================= EXE任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
         }
 
+        /// <summary>
+        /// 执行DLL任务
+        /// </summary>
+        /// <param name="job"></param>
         private void InvokeDllJob(ManageJob job)
         {
             NotifyClientLog(job.Id, "================= DLL任务准备运行 =================");
@@ -336,7 +372,11 @@ namespace HlcJobService
 
             NotifyClientLog(job.Id, $"================= DLL任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
         }
-
+         
+        /// <summary>
+        /// 执行EXE服务
+        /// </summary>
+        /// <param name="job"></param>
         private void InvokeExeServer(ManageJob job)
         {
             var @params = job.Params.ToArray();
@@ -405,6 +445,10 @@ namespace HlcJobService
             });
         }
 
+        /// <summary>
+        /// 执行DLL服务
+        /// </summary>
+        /// <param name="job"></param>
         private void InvokeDllServer(ManageJob job)
         {
             var types = job.Params.Select(p => typeof(string)).ToArray();
@@ -475,6 +519,10 @@ namespace HlcJobService
             });
         }
 
+        /// <summary>
+        /// 执行CMD服务
+        /// </summary>
+        /// <param name="job"></param>
         private void InvokeCmdServer(ManageJob job)
         {
             var jobIndex = Jobs.FindIndex(j => j.Id.Equals(job.Id));
@@ -564,7 +612,12 @@ namespace HlcJobService
             });
         }
 
-
+        /// <summary>
+        /// 从ManageJob创建XML
+        /// </summary>
+        /// <param name="xmlDoc"></param>
+        /// <param name="job"></param>
+        /// <returns></returns>
         private XmlElement CreateXmlJob(XmlDocument xmlDoc, ManageJob job)
         {
             var xmlJob = xmlDoc.CreateElement("Job");
@@ -588,6 +641,11 @@ namespace HlcJobService
             return xmlJob;
         }
 
+        /// <summary>
+        /// 从XML获得ManageJob
+        /// </summary>
+        /// <param name="xmlJob"></param>
+        /// <returns></returns>
         private ManageJob GetJobFromXml(XmlElement xmlJob)
         {
             var job = new ManageJob();
@@ -626,6 +684,10 @@ namespace HlcJobService
             return job;
         }
 
+        /// <summary>
+        /// 获取所有任务的显示信息
+        /// </summary>
+        /// <returns></returns>
         public List<ManageJob> GetAllJobShows()
         {
             if (Jobs == null)
@@ -638,6 +700,11 @@ namespace HlcJobService
             return jobShows;
         }
 
+        /// <summary>
+        /// Quartz的Trigger状态转换为任务状态
+        /// </summary>
+        /// <param name="triggerState">Quartz的Trigger状态</param>
+        /// <returns></returns>
         private JobState TriggerState2JobState(TriggerState triggerState)
         {
             switch (triggerState)
@@ -659,6 +726,11 @@ namespace HlcJobService
             }
         }
 
+        /// <summary>
+        /// 通知客户端显示指定任务<paramref name="jobId"/>的Log<paramref name="message"/>
+        /// </summary>
+        /// <param name="jobId">任务Id</param>
+        /// <param name="message">Log信息</param>
         public void NotifyClientLog(string jobId, string message)
         {
             if (string.IsNullOrWhiteSpace(message))
@@ -671,16 +743,26 @@ namespace HlcJobService
             ClientLogHandler?.Invoke(jobId, log);
         }
 
+        /// <summary>
+        /// 更新客户端的任务信息
+        /// </summary>
+        /// <param name="job">要更新的任务</param>
         public void UpdateClientJob(ManageJob job)
         {
             UpdateClientJobHandler?.Invoke(Job2Show(job));
         }
 
+        /// <summary>
+        /// 任务信息转换为需要显示的任务信息
+        /// </summary>
+        /// <param name="job">要显示的任务</param>
+        /// <returns></returns>
         private ManageJob Job2Show(ManageJob job)
         {
             if (job.Cron.Equals(Constant.ServerCron))
             {
                 job.NextFireTime = null;
+                job.State = job.Enable ? job.State : JobState.None;
             }
             else
             {
@@ -695,6 +777,10 @@ namespace HlcJobService
             return job;
         }
 
+        /// <summary>
+        /// 移除指定任务
+        /// </summary>
+        /// <param name="jobId">任务Id</param>
         public void DeleteJob(string jobId)
         {
             _scheduler.DeleteJob(new JobKey(jobId)).Wait();
@@ -721,6 +807,4 @@ namespace HlcJobService
             }
         }
     }
-
-    
 }

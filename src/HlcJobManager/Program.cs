@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace HlcJobManager
@@ -14,6 +11,8 @@ namespace HlcJobManager
         [STAThread]
         static void Main()
         {
+            AppDomain.CurrentDomain.UnhandledException += (sender, args) => NLog.LogManager.GetCurrentClassLogger().Fatal(args.ExceptionObject);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

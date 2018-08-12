@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ServiceModel;
-using System.Threading;
 using HlcJobCommon;
 using HlcJobCommon.Wcf;
 using HlcJobService.Wcf;
@@ -8,6 +7,9 @@ using NLog;
 
 namespace HlcJobService
 {
+    /// <summary>
+    /// 宿主服务
+    /// </summary>
     internal class HostService : IDisposable
     {
         private ILogger m_logger = null;
@@ -24,6 +26,9 @@ namespace HlcJobService
             m_service.Closed += (sender, args) => { m_logger.Info("交互服务已关闭"); };
         }
 
+        /// <summary>
+        /// 启动宿主服务
+        /// </summary>
         internal void Start()
         {
             m_logger.Info("服务启动中...");
@@ -35,6 +40,9 @@ namespace HlcJobService
             m_logger.Info("服务已启动。");
         }
 
+        /// <summary>
+        /// 停止宿主服务
+        /// </summary>
         internal void Stop()
         {
             m_logger.Info("服务停止中...");

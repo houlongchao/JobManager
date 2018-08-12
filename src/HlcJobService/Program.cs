@@ -13,15 +13,7 @@ namespace HlcJobService
         {
             try
             {
-                AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) =>
-                {
-                    LogManager.GetCurrentClassLogger().Error(eventArgs.ExceptionObject);
-                };
-
-                //AppDomain.CurrentDomain.FirstChanceException += (sender, eventArgs) =>
-                //{
-                //    LogManager.GetCurrentClassLogger().Error(eventArgs.Exception);
-                //};
+                AppDomain.CurrentDomain.UnhandledException += (sender, eventArgs) => LogManager.GetCurrentClassLogger().Fatal(eventArgs.ExceptionObject);
 
                 var srvName = ConfigurationManager.AppSettings["srvname"];
                 if (string.IsNullOrWhiteSpace(srvName))
@@ -38,7 +30,7 @@ namespace HlcJobService
                 var srvDesc = ConfigurationManager.AppSettings["srvdesc"];
                 if (string.IsNullOrWhiteSpace(srvDesc))
                 {
-                    srvDesc = "Hlc任务调度服务";
+                    srvDesc = "HLC任务调度服务";
                 }
 
                 HostFactory.Run(config =>
@@ -47,7 +39,6 @@ namespace HlcJobService
                     {
                         callback.ConstructUsing(s => new HostService());
                         callback.WhenStarted(s => s.Start());
-                        //callback.WhenShutdown(s => s.Stop());
                         callback.WhenStopped(s => s.Stop());
                     });
                     config.SetDisplayName(srvDisplayName);

@@ -7,6 +7,9 @@ using Quartz;
 
 namespace HlcJobService.Quartz
 {
+    /// <summary>
+    /// Quartz任务调度实现
+    /// </summary>
     public class QuartzJob : IJob
     {
         private ILogger _logger;
