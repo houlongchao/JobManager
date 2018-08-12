@@ -70,7 +70,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -86,9 +85,12 @@
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)*" "$(SolutionDir)\output" /I /S /Y
 del "$(SolutionDir)\output\*.pdb"
-del "$(SolutionDir)\output\*.xml"</PostBuildEvent>
+del "$(SolutionDir)\output\*.xml"
+del "$(SolutionDir)\output\*.log"
+rm -r -d "$(SolutionDir)\output\logs"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>rd /s /q "$(TargetDir)log"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -22,6 +22,7 @@ namespace HlcJobManager
         private readonly Dictionary<string, Queue<string>> _logDict = new Dictionary<string, Queue<string>>();
         private string _title;
         private ILogger _logger;
+        private bool _disableJobEdit = false;
 
         /// <summary>
         /// 当前选中的任务
@@ -104,6 +105,7 @@ namespace HlcJobManager
             AsyncUtil.Run(() =>
             {
                 RefreshStatusMsgByServerStatus(ServerStatus.Installing);
+                RefreshServerControlBtn(ServerStatus.Installing);
                 DynamicUtil.InvokeCmd("HlcJobService install");
             }, RefreshServerStatus, exception =>
             {
@@ -128,6 +130,7 @@ namespace HlcJobManager
             AsyncUtil.Run(() =>
             {
                 RefreshStatusMsgByServerStatus(ServerStatus.StartPending);
+                RefreshServerControlBtn(ServerStatus.StartPending);
                 DynamicUtil.InvokeCmd("HlcJobService start");
             }, () =>
             {
@@ -155,6 +158,7 @@ namespace HlcJobManager
             AsyncUtil.Run(() =>
             {
                 RefreshStatusMsgByServerStatus(ServerStatus.StopPending);
+                RefreshServerControlBtn(ServerStatus.StopPending);
                 DynamicUtil.InvokeCmd("HlcJobService stop");
             }, RefreshServerStatus, exception =>
             {
@@ -172,6 +176,7 @@ namespace HlcJobManager
             AsyncUtil.Run(() =>
             {
                 RefreshStatusMsgByServerStatus(ServerStatus.Uninstalling);
+                RefreshServerControlBtn(ServerStatus.Uninstalling);
                 DynamicUtil.InvokeCmd("HlcJobService uninstall");
             }, RefreshServerStatus, exception =>
             {
@@ -285,6 +290,11 @@ namespace HlcJobManager
         #region DataGridView Event
         private void dgv_data_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
+            if (_disableJobEdit)
+            {
+                return;
+            }
+
             if (e.Button == MouseButtons.Right)
             {
                 var cellLocation = dgv_data.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, false).Location;
@@ -309,6 +319,11 @@ namespace HlcJobManager
 
         private void dgv_data_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (_disableJobEdit)
+            {
+                return;
+            }
+
             var rowIndex = e.RowIndex;
             if (rowIndex < 0)
             {
@@ -388,7 +403,7 @@ namespace HlcJobManager
 
             var jobEditForm = new JobEditForm(job);
             jobEditForm.ShowDialog();
-            RefreshJobView(jobEditForm.JobId);
+            RefreshJobView(job.Id);
         }
 
         private void UpdateJob(ManageJob job)
@@ -606,7 +621,7 @@ namespace HlcJobManager
                     btn_stopSvc.Enabled = false;
                     btn_uninstallSvc.Enabled = false;
                     gbx_jobTool.Enabled = false;
-                    pl_main.Enabled = false;
+                    _disableJobEdit = true;
                     break;
                 case ServerStatus.StartPending:
                 case ServerStatus.StopPending:
@@ -617,7 +632,7 @@ namespace HlcJobManager
                     btn_stopSvc.Enabled = false;
                     btn_uninstallSvc.Enabled = false;
                     gbx_jobTool.Enabled = false;
-                    pl_main.Enabled = false;
+                    _disableJobEdit = true;
                     break;
                 case ServerStatus.Running:
                     btn_installSvc.Enabled = false;
@@ -625,7 +640,7 @@ namespace HlcJobManager
                     btn_stopSvc.Enabled = true;
                     btn_uninstallSvc.Enabled = true;
                     gbx_jobTool.Enabled = true;
-                    pl_main.Enabled = true;
+                    _disableJobEdit = false;
                     break;
                 case ServerStatus.Stoped:
                     btn_installSvc.Enabled = false;
@@ -633,7 +648,7 @@ namespace HlcJobManager
                     btn_stopSvc.Enabled = false;
                     btn_uninstallSvc.Enabled = true;
                     gbx_jobTool.Enabled = false;
-                    pl_main.Enabled = false;
+                    _disableJobEdit = true;
                     break;
                 case ServerStatus.Error:
                     btn_installSvc.Enabled = false;
@@ -641,7 +656,7 @@ namespace HlcJobManager
                     btn_stopSvc.Enabled = false;
                     btn_uninstallSvc.Enabled = false;
                     gbx_jobTool.Enabled = false;
-                    pl_main.Enabled = false;
+                    _disableJobEdit = true;
                     break;
                 default:
                     btn_installSvc.Enabled = false;
@@ -649,7 +664,7 @@ namespace HlcJobManager
                     btn_stopSvc.Enabled = false;
                     btn_uninstallSvc.Enabled = false;
                     gbx_jobTool.Enabled = false;
-                    pl_main.Enabled = false;
+                    _disableJobEdit = true;
                     break;
             }
         }
@@ -665,7 +680,7 @@ namespace HlcJobManager
                     RefreshStatusMsg("服务安装中");
                     break;
                 case ServerStatus.Uninstalling:
-                    RefreshStatusMsg("服务安装中");
+                    RefreshStatusMsg("服务卸载中");
                     break;
                 case ServerStatus.StartPending:
                     RefreshStatusMsg("服务正在启动");

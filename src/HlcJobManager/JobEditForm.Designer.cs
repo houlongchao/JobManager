@@ -266,7 +266,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "JobEditForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Hlc任务编辑界面";
+            this.Text = "任务调度编辑";
             this.Load += new System.EventHandler(this.JobEditForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_params)).EndInit();
             this.ResumeLayout(false);

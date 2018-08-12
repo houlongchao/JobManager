@@ -21,7 +21,7 @@ namespace HlcJobService
     /// </summary>
     public class JobManager
     {
-        private ILogger _logger = LogManager.GetCurrentClassLogger(typeof(JobManager));
+        private ILogger _logger = LogManager.GetCurrentClassLogger();
         private static JobManager _instance;
         private readonly List<ManageJob> _jobs = new List<ManageJob>();
         private IScheduler _scheduler;
