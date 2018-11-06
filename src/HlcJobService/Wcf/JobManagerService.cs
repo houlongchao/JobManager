@@ -27,11 +27,25 @@ namespace HlcJobService.Wcf
             IJobManagerCallback callback = OperationContext.Current.GetCallbackChannel<IJobManagerCallback>();
             JobManager.Instance.ClientLogHandler = (id, log) =>
             {
-                callback.WriteLog(id, log);
+                try
+                {
+                    callback.WriteLog(id, log);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "ClientLogHandler Error.");
+                }
             };
             JobManager.Instance.UpdateClientJobHandler = (job) =>
             {
-                callback.JobUpdated(job);
+                try
+                {
+                    callback.JobUpdated(job);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "UpdateClientJobHandler Error.");
+                }
             };
         }
         
