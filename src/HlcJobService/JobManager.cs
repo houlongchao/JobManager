@@ -275,7 +275,7 @@ namespace HlcJobService
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            _logger.Debug($"执行CMD任务：{job.Name}[{job.FilePath}]");
+            _logger.Info($"执行CMD任务：{job.Name}[{job.FilePath}]");
             
             var jobFilePath = job.FilePath;
 
@@ -321,7 +321,7 @@ namespace HlcJobService
 
             var @params = job.Params.ToArray();
 
-            _logger.Debug($"执行EXE任务：{job.Name}[{job.FilePath}({string.Join(",", @params)})]");
+            _logger.Info($"执行EXE任务：{job.Name}[{job.FilePath}({string.Join(",", @params)})]");
 
             var writer = new HlcTextWriter();
             writer.WriteHandler += str =>
@@ -354,7 +354,7 @@ namespace HlcJobService
             var types = job.Params.Select(p => typeof(string)).ToArray();
             var @params = job.Params.ToArray();
 
-            _logger.Debug($"执行DLL任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
+            _logger.Info($"执行DLL任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
 
             var writer = new HlcTextWriter();
             writer.WriteHandler += str =>
@@ -400,7 +400,7 @@ namespace HlcJobService
 
                 NotifyClientLog(job.Id, "================= EXE Server准备运行 ==================");
 
-                _logger.Debug($"执行DLL Server任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
+                _logger.Info($"执行DLL Server任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
 
                 var writer = new HlcTextWriter();
                 writer.WriteHandler += str =>
@@ -473,7 +473,7 @@ namespace HlcJobService
 
                 NotifyClientLog(job.Id, "================= DLL Server准备运行 ==================");
 
-                _logger.Debug($"执行DLL Server任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
+                _logger.Info($"执行DLL Server任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
 
                 var writer = new HlcTextWriter();
                 writer.WriteHandler += str =>
@@ -544,7 +544,7 @@ namespace HlcJobService
 
                 NotifyClientLog(job.Id, "================= CMD Server准备运行 ==================");
 
-                _logger.Debug($"执行CMD Server任务：{job.Name}[{job.FilePath}]");
+                _logger.Info($"执行CMD Server任务：{job.Name}[{job.FilePath}]");
 
                 var writer = new HlcTextWriter();
                 writer.WriteHandler += str =>

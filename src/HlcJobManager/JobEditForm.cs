@@ -53,7 +53,11 @@ namespace HlcJobManager
 
         private void JobEditForm_Load(object sender, EventArgs e)
         {
-            
+            var toolTip = new ToolTip();
+            toolTip.SetToolTip(img_help,@"(-)一个减号，表示一次性服务，只启动一次。
+(0/10 * * * * ?)表示调度计划，每10秒运行一次
+调度计划由7段构成(秒 分 时 日 月 星期 年(可选))
+详细调度计划编写可查阅Quartz的cron表达式");
         }
 
         private void btn_ok_Click(object sender, EventArgs e)

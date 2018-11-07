@@ -381,7 +381,7 @@
             this.MinimumSize = new System.Drawing.Size(804, 525);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "任务调度管理 | By: Hou LongChao";
+            this.Text = "任务调度管理 | By: 侯龙超";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.pl_main.ResumeLayout(false);
             this.spl_main.Panel1.ResumeLayout(false);

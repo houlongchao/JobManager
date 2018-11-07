@@ -49,7 +49,9 @@
             this.btn_ok = new System.Windows.Forms.Button();
             this.lb_workPath = new System.Windows.Forms.Label();
             this.txt_workPath = new System.Windows.Forms.TextBox();
+            this.img_help = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_params)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.img_help)).BeginInit();
             this.SuspendLayout();
             // 
             // lb_name
@@ -238,11 +240,22 @@
             this.txt_workPath.Size = new System.Drawing.Size(399, 21);
             this.txt_workPath.TabIndex = 6;
             // 
+            // img_help
+            // 
+            this.img_help.Image = global::HlcJobManager.Properties.Resources.help_16px;
+            this.img_help.Location = new System.Drawing.Point(254, 51);
+            this.img_help.Name = "img_help";
+            this.img_help.Size = new System.Drawing.Size(16, 16);
+            this.img_help.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.img_help.TabIndex = 11;
+            this.img_help.TabStop = false;
+            // 
             // JobEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(496, 265);
+            this.Controls.Add(this.img_help);
             this.Controls.Add(this.btn_ok);
             this.Controls.Add(this.btn_cancel);
             this.Controls.Add(this.dgv_params);
@@ -269,6 +282,7 @@
             this.Text = "任务调度编辑";
             this.Load += new System.EventHandler(this.JobEditForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_params)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.img_help)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -296,5 +310,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_param;
         private System.Windows.Forms.Label lb_workPath;
         private System.Windows.Forms.TextBox txt_workPath;
+        private System.Windows.Forms.PictureBox img_help;
     }
 }

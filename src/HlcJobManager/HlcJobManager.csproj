@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HlcJobManager.ico" />
+    <None Include="Resources\help_16px.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
