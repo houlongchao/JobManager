@@ -155,6 +155,11 @@ namespace HlcJobManager
                 return;
             }
 
+            if (MessageBox.Show("确定要停止宿主服务（将会关闭所有任务）？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
+
             AsyncUtil.Run(() =>
             {
                 RefreshStatusMsgByServerStatus(ServerStatus.StopPending);
@@ -171,6 +176,11 @@ namespace HlcJobManager
             if (JobService == null)
             {
                 MessageBox.Show("服务不存在", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            if (MessageBox.Show("确定要卸载宿主服务（将会关闭所有任务）？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
             }
 
             AsyncUtil.Run(() =>

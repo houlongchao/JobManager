@@ -201,7 +201,7 @@
             this.gbx_jobTool.Controls.Add(this.btn_delJob);
             this.gbx_jobTool.Controls.Add(this.btn_editJob);
             this.gbx_jobTool.Controls.Add(this.btn_addJob);
-            this.gbx_jobTool.Location = new System.Drawing.Point(661, 167);
+            this.gbx_jobTool.Location = new System.Drawing.Point(661, 8);
             this.gbx_jobTool.Name = "gbx_jobTool";
             this.gbx_jobTool.Size = new System.Drawing.Size(115, 175);
             this.gbx_jobTool.TabIndex = 1;
@@ -305,7 +305,7 @@
             this.gbx_serviceTool.Controls.Add(this.btn_stopSvc);
             this.gbx_serviceTool.Controls.Add(this.btn_startSvc);
             this.gbx_serviceTool.Controls.Add(this.btn_installSvc);
-            this.gbx_serviceTool.Location = new System.Drawing.Point(661, 13);
+            this.gbx_serviceTool.Location = new System.Drawing.Point(661, 189);
             this.gbx_serviceTool.Name = "gbx_serviceTool";
             this.gbx_serviceTool.Size = new System.Drawing.Size(115, 146);
             this.gbx_serviceTool.TabIndex = 2;
