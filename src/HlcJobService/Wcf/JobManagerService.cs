@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 using HlcJobCommon;
 using HlcJobCommon.Wcf;
@@ -166,6 +167,15 @@ namespace HlcJobService.Wcf
                     return false;
                 }
 
+                if (JobManager.Instance.Jobs.Count<=0)
+                {
+                    job.Rank = 1;
+                }
+                else
+                {
+                    job.Rank = JobManager.Instance.Jobs.Max(j => j.Rank) + 1;
+                }
+                
                 JobManager.Instance.Jobs.Add(job);
 
                 JobManager.Instance.SaveJobs();
@@ -260,6 +270,38 @@ namespace HlcJobService.Wcf
         public List<string> GetChacheLog(string jobId)
         {
             return LogCacheManager.Instance.GetLog(jobId);
+        }
+
+        public bool SwapJobRank(string jobId1, string jobId2)
+        {
+            try
+            {
+                var jobIndex1 = JobManager.Instance.Jobs.FindIndex(j => j.Id.Equals(jobId1));
+                var jobIndex2 = JobManager.Instance.Jobs.FindIndex(j => j.Id.Equals(jobId2));
+
+                if (jobIndex1 < 0 || jobIndex2 < 0)
+                {
+                    _logger.Warn($"交换任务位置【{jobId1}】【{jobId2}】失败");
+                    JobManager.Instance.NotifyClientLog("", $"交换位置失败, 未找到需要更新的任务");
+                    return false;
+                }
+
+                var tempRank = JobManager.Instance.Jobs[jobIndex1].Rank;
+                JobManager.Instance.Jobs[jobIndex1].Rank = JobManager.Instance.Jobs[jobIndex2].Rank;
+                JobManager.Instance.Jobs[jobIndex2].Rank = tempRank;
+
+                JobManager.Instance.SaveJobs();
+                
+                JobManager.Instance.NotifyClientLog("", $"交换位置成功");
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, $"交换任务位置【{jobId1}】【{jobId2}】失败");
+                JobManager.Instance.NotifyClientLog("", $"交换位置失败，{e.Message}");
+                return false;
+            }
         }
     }
 }

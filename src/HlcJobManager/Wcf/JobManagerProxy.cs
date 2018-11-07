@@ -57,5 +57,10 @@ namespace HlcJobManager.Wcf
         {
             return m_jobManagerFactory.CreateChannel().GetChacheLog(jobId);
         }
+
+        public bool SwapJobRank(string jobId1, string jobId2)
+        {
+            return m_jobManagerFactory.CreateChannel().SwapJobRank(jobId1, jobId2);
+        }
     }
 }

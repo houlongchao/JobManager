@@ -218,31 +218,6 @@ namespace HlcJobManager
             EditJobRow(selectedRow);
         }
 
-        private void btn_delJob_Click(object sender, EventArgs e)
-        {
-            if (dgv_data.SelectedRows.Count <= 0)
-            {
-                return;
-            }
-
-            var selectedJob = SelectedJob;
-
-            var result = MessageBox.Show($"确定要删除任务【{selectedJob.Name}】吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result != DialogResult.Yes)
-            {
-                return;
-            }
-
-            AsyncUtil.Run(() => _jobManagerProxy.RemoveJob(selectedJob.Id), removeResult =>
-            {
-                RefreshJobView();
-            }, exception =>
-            {
-                _logger.Error(exception, "删除任务出错");
-                RefreshJobView();
-            });
-        }
-
         private void btn_refreshJobs_Click(object sender, EventArgs e)
         {
             if (JobService == null)
@@ -320,6 +295,10 @@ namespace HlcJobManager
                     {
                         SwitchJobEnable(job);
                     });
+                    menu.MenuItems.Add("删除", (o, args) =>
+                    {
+                        delJob();
+                    });
 
                     menu.Show(dgv_data, new Point(cellLocation.X + e.X, cellLocation.Y + e.Y));
                 }
@@ -348,10 +327,71 @@ namespace HlcJobManager
         private void dgv_data_SelectionChanged(object sender, EventArgs e)
         {
             var selectedJob = SelectedJob;
-
-            RefreshEnableBtn(selectedJob);
-
             ShowLog(selectedJob);
+        }
+
+        private bool swapLock = false;
+
+        private void dgv_data_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (!swapLock)
+            {
+                swapLock = true;
+
+                var selectRowIndex = dgv_data.SelectedRows[0].Index;
+
+                if (e.Control && e.KeyCode == Keys.Up && selectRowIndex > 0)
+                {
+                    var result = _jobManagerProxy.SwapJobRank(dgv_data.Rows[selectRowIndex].Cells["cln_id"].Value.ToString(),
+                        dgv_data.Rows[selectRowIndex - 1].Cells["cln_id"].Value.ToString());
+                    if (result)
+                    {
+                        RefreshJobView(dgv_data.Rows[selectRowIndex].Cells["cln_id"].Value.ToString());
+                    }
+                    e.Handled = true;
+                }
+
+                if (e.Control && e.KeyCode == Keys.Down && selectRowIndex < dgv_data.RowCount - 1)
+                {
+                    var result = _jobManagerProxy.SwapJobRank(dgv_data.Rows[selectRowIndex].Cells["cln_id"].Value.ToString(),
+                        dgv_data.Rows[selectRowIndex + 1].Cells["cln_id"].Value.ToString());
+                    if (result)
+                    {
+                        RefreshJobView(dgv_data.Rows[selectRowIndex].Cells["cln_id"].Value.ToString());
+                    }
+                    e.Handled = true;
+                }
+
+                swapLock = false;
+            }
+
+            
+        }
+
+
+        private void delJob()
+        {
+            if (dgv_data.SelectedRows.Count <= 0)
+            {
+                return;
+            }
+
+            var selectedJob = SelectedJob;
+
+            var result = MessageBox.Show($"确定要删除任务【{selectedJob.Name}】吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (result != DialogResult.Yes)
+            {
+                return;
+            }
+
+            AsyncUtil.Run(() => _jobManagerProxy.RemoveJob(selectedJob.Id), removeResult =>
+            {
+                RefreshJobView();
+            }, exception =>
+            {
+                _logger.Error(exception, "删除任务出错");
+                RefreshJobView();
+            });
         }
 
         #endregion DataGridView Event
@@ -384,7 +424,7 @@ namespace HlcJobManager
 
             DataGridViewRow selectedRow = null;
 
-            foreach (var job in jobs)
+            foreach (var job in jobs.OrderBy(j=>j.Rank))
             {
                 var rowIndex = dgv_data.Rows.Add();
                 var row = dgv_data.Rows[rowIndex];
@@ -423,14 +463,12 @@ namespace HlcJobManager
                 if (row.Cells["cln_id"].Value.Equals(job.Id))
                 {
                     UpdateJobRow(row, job);
-                    RefreshEnableBtn(SelectedJob);
                     return;
                 }
             }
             var rowIndex = dgv_data.Rows.Add();
             var newRow = dgv_data.Rows[rowIndex];
             UpdateJobRow(newRow, job);
-            RefreshEnableBtn(SelectedJob);
         }
 
         private void UpdateJobRow(DataGridViewRow row, ManageJob job)
@@ -730,22 +768,6 @@ namespace HlcJobManager
             Text = $"{_title}（{msg}）";
         }
 
-        private void RefreshEnableBtn(ManageJob job)
-        {
-            if (InvokeRequired)
-            {
-                BeginInvoke(new MethodInvoker(() => RefreshEnableBtn(job)));
-                return;
-            }
-            if (job == null)
-            {
-                btn_jobEnable.Enabled = false;
-                return;
-            }
-            btn_jobEnable.Enabled = true;
-            btn_jobEnable.Text = job.Enable ? "禁用任务" : "启用任务";
-        }
-
         private void ClearDgv()
         {
             if (InvokeRequired)
@@ -771,7 +793,8 @@ namespace HlcJobManager
                 });
         }
         #endregion
-    }
+
+     }
 
     enum ServerStatus
     {

@@ -71,6 +71,13 @@ namespace HlcJobCommon.Wcf
         /// <returns></returns>
         [OperationContract]
         List<string> GetChacheLog(string jobId);
+
+        /// <summary>
+        /// 交换Job的排序
+        /// </summary>
+        /// <returns></returns>
+        [OperationContract]
+        bool SwapJobRank(string jobId1, string jobId2);
     }
     
 }

@@ -75,6 +75,11 @@ namespace HlcJobCommon.Wcf
         /// 上次执行时间
         /// </summary>
         [DataMember] public DateTimeOffset? PreviousFireTime { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        [DataMember] public int Rank { get; set; }
     }
 
     /// <summary>

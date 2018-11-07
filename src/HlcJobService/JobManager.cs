@@ -630,6 +630,7 @@ namespace HlcJobService
             xmlJob.SetAttribute("className", job.ClassName);
             xmlJob.SetAttribute("methodName", job.MethodName);
             xmlJob.SetAttribute("enable", job.Enable.ToString());
+            xmlJob.SetAttribute("rank", job.Rank.ToString());
 
             foreach (var param in job.Params)
             {
@@ -675,7 +676,11 @@ namespace HlcJobService
             var enable = xmlJob.GetAttribute("enable");
             bool.TryParse(enable, out bool jobEnable);
             job.Enable = jobEnable;
-            
+
+            var rank = xmlJob.GetAttribute("rank");
+            int.TryParse(rank, out int jobRank);
+            job.Rank = jobRank;
+
             foreach (XmlElement xmlParam in xmlJob.GetElementsByTagName("param"))
             {
                 job.Params.Add(xmlParam.Attributes["value"].Value);
