@@ -334,7 +334,7 @@ namespace HlcJobManager
 
         private void dgv_data_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!swapLock)
+            if (!swapLock && dgv_data.SelectedRows.Count > 0)
             {
                 swapLock = true;
 

@@ -94,6 +94,7 @@
             this.spl_main.Size = new System.Drawing.Size(641, 476);
             this.spl_main.SplitterDistance = 245;
             this.spl_main.TabIndex = 0;
+            this.spl_main.TabStop = false;
             // 
             // dgv_data
             // 
@@ -191,6 +192,7 @@
             this.txt_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txt_log.Size = new System.Drawing.Size(641, 227);
             this.txt_log.TabIndex = 0;
+            this.txt_log.TabStop = false;
             // 
             // gbx_jobTool
             // 
@@ -211,6 +213,7 @@
             this.btn_refreshJobs.Name = "btn_refreshJobs";
             this.btn_refreshJobs.Size = new System.Drawing.Size(75, 23);
             this.btn_refreshJobs.TabIndex = 0;
+            this.btn_refreshJobs.TabStop = false;
             this.btn_refreshJobs.Text = "刷新任务";
             this.btn_refreshJobs.UseVisualStyleBackColor = true;
             this.btn_refreshJobs.Click += new System.EventHandler(this.btn_refreshJobs_Click);
@@ -222,6 +225,7 @@
             this.btn_addJob.Name = "btn_addJob";
             this.btn_addJob.Size = new System.Drawing.Size(75, 23);
             this.btn_addJob.TabIndex = 0;
+            this.btn_addJob.TabStop = false;
             this.btn_addJob.Text = "添加任务";
             this.btn_addJob.UseVisualStyleBackColor = true;
             this.btn_addJob.Click += new System.EventHandler(this.btn_addJob_Click);
@@ -233,6 +237,7 @@
             this.btn_viewLog.Name = "btn_viewLog";
             this.btn_viewLog.Size = new System.Drawing.Size(75, 23);
             this.btn_viewLog.TabIndex = 0;
+            this.btn_viewLog.TabStop = false;
             this.btn_viewLog.Text = "隐藏日志";
             this.btn_viewLog.UseVisualStyleBackColor = true;
             this.btn_viewLog.Click += new System.EventHandler(this.btn_viewLog_Click);
@@ -257,6 +262,7 @@
             this.btn_clearLog.Name = "btn_clearLog";
             this.btn_clearLog.Size = new System.Drawing.Size(75, 23);
             this.btn_clearLog.TabIndex = 0;
+            this.btn_clearLog.TabStop = false;
             this.btn_clearLog.Text = "清空日志";
             this.btn_clearLog.UseVisualStyleBackColor = true;
             this.btn_clearLog.Click += new System.EventHandler(this.btn_clearLog_Click);
@@ -282,6 +288,7 @@
             this.btn_uninstallSvc.Name = "btn_uninstallSvc";
             this.btn_uninstallSvc.Size = new System.Drawing.Size(75, 23);
             this.btn_uninstallSvc.TabIndex = 0;
+            this.btn_uninstallSvc.TabStop = false;
             this.btn_uninstallSvc.Text = "卸载服务";
             this.btn_uninstallSvc.UseVisualStyleBackColor = true;
             this.btn_uninstallSvc.Click += new System.EventHandler(this.btn_uninstallSvc_Click);
@@ -293,6 +300,7 @@
             this.btn_stopSvc.Name = "btn_stopSvc";
             this.btn_stopSvc.Size = new System.Drawing.Size(75, 23);
             this.btn_stopSvc.TabIndex = 0;
+            this.btn_stopSvc.TabStop = false;
             this.btn_stopSvc.Text = "停止服务";
             this.btn_stopSvc.UseVisualStyleBackColor = true;
             this.btn_stopSvc.Click += new System.EventHandler(this.btn_stopSvc_Click);
@@ -304,6 +312,7 @@
             this.btn_startSvc.Name = "btn_startSvc";
             this.btn_startSvc.Size = new System.Drawing.Size(75, 23);
             this.btn_startSvc.TabIndex = 0;
+            this.btn_startSvc.TabStop = false;
             this.btn_startSvc.Text = "启动服务";
             this.btn_startSvc.UseVisualStyleBackColor = true;
             this.btn_startSvc.Click += new System.EventHandler(this.btn_startSvc_Click);
@@ -315,6 +324,7 @@
             this.btn_installSvc.Name = "btn_installSvc";
             this.btn_installSvc.Size = new System.Drawing.Size(75, 23);
             this.btn_installSvc.TabIndex = 0;
+            this.btn_installSvc.TabStop = false;
             this.btn_installSvc.Text = "安装服务";
             this.btn_installSvc.UseVisualStyleBackColor = true;
             this.btn_installSvc.Click += new System.EventHandler(this.btn_installSvc_Click);
