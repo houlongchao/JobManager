@@ -37,19 +37,20 @@
             this.cmb_type = new System.Windows.Forms.ComboBox();
             this.lb_enable = new System.Windows.Forms.Label();
             this.cmb_enable = new System.Windows.Forms.ComboBox();
-            this.lb_filePath = new System.Windows.Forms.Label();
-            this.txt_filePath = new System.Windows.Forms.TextBox();
+            this.lb_workPath = new System.Windows.Forms.Label();
+            this.txt_workPath = new System.Windows.Forms.TextBox();
             this.lb_className = new System.Windows.Forms.Label();
-            this.txt_className = new System.Windows.Forms.TextBox();
             this.lb_methodName = new System.Windows.Forms.Label();
-            this.txt_methodName = new System.Windows.Forms.TextBox();
             this.dgv_params = new System.Windows.Forms.DataGridView();
             this.cln_param = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.btn_cancel = new System.Windows.Forms.Button();
             this.btn_ok = new System.Windows.Forms.Button();
-            this.lb_workPath = new System.Windows.Forms.Label();
-            this.txt_workPath = new System.Windows.Forms.TextBox();
+            this.lb_cmd = new System.Windows.Forms.Label();
+            this.txt_cmd = new System.Windows.Forms.TextBox();
             this.img_help = new System.Windows.Forms.PictureBox();
+            this.btn_selectPath = new System.Windows.Forms.Button();
+            this.cmb_classes = new System.Windows.Forms.ComboBox();
+            this.cmb_methods = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_params)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.img_help)).BeginInit();
             this.SuspendLayout();
@@ -123,21 +124,21 @@
             this.cmb_enable.Size = new System.Drawing.Size(141, 20);
             this.cmb_enable.TabIndex = 4;
             // 
-            // lb_filePath
+            // lb_workPath
             // 
-            this.lb_filePath.AutoSize = true;
-            this.lb_filePath.Location = new System.Drawing.Point(20, 80);
-            this.lb_filePath.Name = "lb_filePath";
-            this.lb_filePath.Size = new System.Drawing.Size(65, 12);
-            this.lb_filePath.TabIndex = 0;
-            this.lb_filePath.Text = "路径指令：";
+            this.lb_workPath.AutoSize = true;
+            this.lb_workPath.Location = new System.Drawing.Point(20, 80);
+            this.lb_workPath.Name = "lb_workPath";
+            this.lb_workPath.Size = new System.Drawing.Size(65, 12);
+            this.lb_workPath.TabIndex = 0;
+            this.lb_workPath.Text = "工作路径：";
             // 
-            // txt_filePath
+            // txt_workPath
             // 
-            this.txt_filePath.Location = new System.Drawing.Point(91, 76);
-            this.txt_filePath.Name = "txt_filePath";
-            this.txt_filePath.Size = new System.Drawing.Size(399, 21);
-            this.txt_filePath.TabIndex = 5;
+            this.txt_workPath.Location = new System.Drawing.Point(91, 76);
+            this.txt_workPath.Name = "txt_workPath";
+            this.txt_workPath.Size = new System.Drawing.Size(366, 21);
+            this.txt_workPath.TabIndex = 5;
             // 
             // lb_className
             // 
@@ -149,14 +150,6 @@
             this.lb_className.TabIndex = 0;
             this.lb_className.Text = "类名：";
             // 
-            // txt_className
-            // 
-            this.txt_className.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.txt_className.Location = new System.Drawing.Point(349, 131);
-            this.txt_className.Name = "txt_className";
-            this.txt_className.Size = new System.Drawing.Size(141, 21);
-            this.txt_className.TabIndex = 7;
-            // 
             // lb_methodName
             // 
             this.lb_methodName.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -166,14 +159,6 @@
             this.lb_methodName.Size = new System.Drawing.Size(53, 12);
             this.lb_methodName.TabIndex = 0;
             this.lb_methodName.Text = "方法名：";
-            // 
-            // txt_methodName
-            // 
-            this.txt_methodName.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.txt_methodName.Location = new System.Drawing.Point(349, 163);
-            this.txt_methodName.Name = "txt_methodName";
-            this.txt_methodName.Size = new System.Drawing.Size(141, 21);
-            this.txt_methodName.TabIndex = 8;
             // 
             // dgv_params
             // 
@@ -224,21 +209,21 @@
             this.btn_ok.UseVisualStyleBackColor = true;
             this.btn_ok.Click += new System.EventHandler(this.btn_ok_Click);
             // 
-            // lb_workPath
+            // lb_cmd
             // 
-            this.lb_workPath.AutoSize = true;
-            this.lb_workPath.Location = new System.Drawing.Point(20, 107);
-            this.lb_workPath.Name = "lb_workPath";
-            this.lb_workPath.Size = new System.Drawing.Size(65, 12);
-            this.lb_workPath.TabIndex = 0;
-            this.lb_workPath.Text = "工作目录：";
+            this.lb_cmd.AutoSize = true;
+            this.lb_cmd.Location = new System.Drawing.Point(20, 107);
+            this.lb_cmd.Name = "lb_cmd";
+            this.lb_cmd.Size = new System.Drawing.Size(59, 12);
+            this.lb_cmd.TabIndex = 0;
+            this.lb_cmd.Text = "cmd命令：";
             // 
-            // txt_workPath
+            // txt_cmd
             // 
-            this.txt_workPath.Location = new System.Drawing.Point(91, 103);
-            this.txt_workPath.Name = "txt_workPath";
-            this.txt_workPath.Size = new System.Drawing.Size(399, 21);
-            this.txt_workPath.TabIndex = 6;
+            this.txt_cmd.Location = new System.Drawing.Point(91, 103);
+            this.txt_cmd.Name = "txt_cmd";
+            this.txt_cmd.Size = new System.Drawing.Size(399, 21);
+            this.txt_cmd.TabIndex = 6;
             // 
             // img_help
             // 
@@ -250,27 +235,61 @@
             this.img_help.TabIndex = 11;
             this.img_help.TabStop = false;
             // 
+            // btn_selectPath
+            // 
+            this.btn_selectPath.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btn_selectPath.Location = new System.Drawing.Point(463, 76);
+            this.btn_selectPath.Name = "btn_selectPath";
+            this.btn_selectPath.Size = new System.Drawing.Size(27, 23);
+            this.btn_selectPath.TabIndex = 10;
+            this.btn_selectPath.TabStop = false;
+            this.btn_selectPath.Text = "..";
+            this.btn_selectPath.UseVisualStyleBackColor = true;
+            this.btn_selectPath.Click += new System.EventHandler(this.btn_selectPath_Click);
+            // 
+            // cmb_classes
+            // 
+            this.cmb_classes.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.cmb_classes.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_classes.FormattingEnabled = true;
+            this.cmb_classes.Location = new System.Drawing.Point(349, 132);
+            this.cmb_classes.Name = "cmb_classes";
+            this.cmb_classes.Size = new System.Drawing.Size(141, 20);
+            this.cmb_classes.TabIndex = 7;
+            this.cmb_classes.SelectedIndexChanged += new System.EventHandler(this.cmb_classes_SelectedIndexChanged);
+            // 
+            // cmb_methods
+            // 
+            this.cmb_methods.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.cmb_methods.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmb_methods.FormattingEnabled = true;
+            this.cmb_methods.Location = new System.Drawing.Point(349, 164);
+            this.cmb_methods.Name = "cmb_methods";
+            this.cmb_methods.Size = new System.Drawing.Size(141, 20);
+            this.cmb_methods.TabIndex = 8;
+            // 
             // JobEditForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(496, 265);
+            this.Controls.Add(this.cmb_methods);
+            this.Controls.Add(this.cmb_classes);
             this.Controls.Add(this.img_help);
+            this.Controls.Add(this.btn_selectPath);
             this.Controls.Add(this.btn_ok);
             this.Controls.Add(this.btn_cancel);
             this.Controls.Add(this.dgv_params);
             this.Controls.Add(this.cmb_enable);
             this.Controls.Add(this.cmb_type);
+            this.Controls.Add(this.txt_cmd);
             this.Controls.Add(this.txt_workPath);
-            this.Controls.Add(this.txt_filePath);
-            this.Controls.Add(this.txt_methodName);
-            this.Controls.Add(this.txt_className);
             this.Controls.Add(this.txt_cron);
             this.Controls.Add(this.lb_enable);
             this.Controls.Add(this.txt_name);
-            this.Controls.Add(this.lb_workPath);
+            this.Controls.Add(this.lb_cmd);
             this.Controls.Add(this.lb_methodName);
-            this.Controls.Add(this.lb_filePath);
+            this.Controls.Add(this.lb_workPath);
             this.Controls.Add(this.lb_className);
             this.Controls.Add(this.lb_type);
             this.Controls.Add(this.lb_cron);
@@ -298,18 +317,19 @@
         private System.Windows.Forms.ComboBox cmb_type;
         private System.Windows.Forms.Label lb_enable;
         private System.Windows.Forms.ComboBox cmb_enable;
-        private System.Windows.Forms.Label lb_filePath;
-        private System.Windows.Forms.TextBox txt_filePath;
+        private System.Windows.Forms.Label lb_workPath;
+        private System.Windows.Forms.TextBox txt_workPath;
         private System.Windows.Forms.Label lb_className;
-        private System.Windows.Forms.TextBox txt_className;
         private System.Windows.Forms.Label lb_methodName;
-        private System.Windows.Forms.TextBox txt_methodName;
         private System.Windows.Forms.DataGridView dgv_params;
         private System.Windows.Forms.Button btn_cancel;
         private System.Windows.Forms.Button btn_ok;
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_param;
-        private System.Windows.Forms.Label lb_workPath;
-        private System.Windows.Forms.TextBox txt_workPath;
+        private System.Windows.Forms.Label lb_cmd;
+        private System.Windows.Forms.TextBox txt_cmd;
         private System.Windows.Forms.PictureBox img_help;
+        private System.Windows.Forms.Button btn_selectPath;
+        private System.Windows.Forms.ComboBox cmb_classes;
+        private System.Windows.Forms.ComboBox cmb_methods;
     }
 }

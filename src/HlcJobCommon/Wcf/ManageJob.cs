@@ -31,14 +31,14 @@ namespace HlcJobCommon.Wcf
         [DataMember] public string Cron { get; set; }
 
         /// <summary>
-        /// 工作目录
-        /// </summary>
-        [DataMember] public string FilePath { get; set; }
-
-        /// <summary>
-        /// 任务文件路径
+        /// 工作目录或文件路径
         /// </summary>
         [DataMember] public string WorkPath { get; set; }
+        
+        /// <summary>
+        /// cmd命令
+        /// </summary>
+        [DataMember] public string Command { get; set; }
 
         /// <summary>
         /// 任务执行的类

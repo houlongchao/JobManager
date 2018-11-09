@@ -79,5 +79,4 @@ namespace HlcJobCommon.Wcf
         [OperationContract]
         bool SwapJobRank(string jobId1, string jobId2);
     }
-    
 }

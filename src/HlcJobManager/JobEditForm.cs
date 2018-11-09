@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using HlcJobCommon;
 using HlcJobCommon.Wcf;
@@ -37,18 +38,8 @@ namespace HlcJobManager
         public JobEditForm(ManageJob job) : this()
         {
             _job = job;
-            txt_name.Text = job.Name;
-            cmb_type.Text = job.Type.ToString();
-            txt_cron.Text = job.Cron;
-            cmb_enable.Text = job.Enable ? "启用" : "禁用";
-            txt_filePath.Text = job.FilePath;
-            txt_workPath.Text = job.WorkPath;
-            txt_className.Text = job.ClassName;
-            txt_methodName.Text = job.MethodName;
-            foreach (var param in job.Params)
-            {
-                dgv_params.Rows.Add(param);
-            }
+
+            FillJob(job);
         }
 
         private void JobEditForm_Load(object sender, EventArgs e)
@@ -88,30 +79,178 @@ namespace HlcJobManager
             });
         }
 
+        private void btn_cancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void cmb_type_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedType = cmb_type.Text;
+            if (JobType.DLL.ToString().Equals(selectedType))
+            {
+                lb_workPath.Text = "dll路径：";
+                txt_workPath.Text = "";
+
+                dgv_params.Rows.Clear();
+                dgv_params.Enabled = true;
+                dgv_params.Visible = true;
+
+                cmb_classes.Text = "";
+                cmb_classes.Enabled = true;
+                cmb_classes.Visible = true;
+
+                cmb_methods.Text = "";
+                cmb_methods.Enabled = true;
+                cmb_methods.Visible = true;
+
+                lb_className.Visible = true;
+                lb_methodName.Visible = true;
+
+                txt_cron.Enabled = true;
+                txt_cron.Text = "";
+
+                lb_cmd.Visible = false;
+                txt_cmd.Text = "";
+                txt_cmd.Visible = false;
+
+                Height = 280;
+            }
+            else if (JobType.EXE.ToString().Equals(selectedType))
+            {
+                lb_workPath.Text = "exe路径：";
+                txt_workPath.Text = "";
+
+                dgv_params.Rows.Clear();
+                dgv_params.Enabled = true;
+                dgv_params.Visible = true;
+
+                cmb_classes.Text = "";
+                cmb_classes.Enabled = false;
+                cmb_classes.Visible = false;
+
+                cmb_methods.Text = "";
+                cmb_methods.Enabled = false;
+                cmb_methods.Visible = false;
+
+                lb_className.Visible = false;
+                lb_methodName.Visible = false;
+
+                txt_cron.Enabled = true;
+                txt_cron.Text = "";
+
+                lb_cmd.Visible = false;
+                txt_cmd.Text = "";
+                txt_cmd.Visible = false;
+
+                Height = 280;
+            }
+            else if(JobType.CMD.ToString().Equals(selectedType))
+            {
+                lb_workPath.Text = "工作目录：";
+                txt_workPath.Text = "";
+
+                dgv_params.Rows.Clear();
+                dgv_params.Enabled = false;
+                dgv_params.Visible = false;
+
+                cmb_classes.Text = "";
+                cmb_classes.Enabled = false;
+                cmb_classes.Visible = false;
+
+                cmb_methods.Text = "";
+                cmb_methods.Enabled = false;
+                cmb_methods.Visible = false;
+
+                lb_className.Visible = false;
+                lb_methodName.Visible = false;
+
+                txt_cron.Enabled = true;
+                txt_cron.Text = "";
+
+                lb_cmd.Visible = true;
+                txt_cmd.Text = "";
+                txt_cmd.Visible = true;
+
+                Height = 200;
+            }
+        }
+
+        private void btn_selectPath_Click(object sender, EventArgs e)
+        {
+            var selectedType = cmb_type.Text;
+            if (JobType.DLL.ToString().Equals(selectedType))
+            {
+                using (var ofd = new OpenFileDialog())
+                {
+                    ofd.Filter = "*.dll|*.dll";
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        txt_workPath.Text = ofd.FileName;
+                        InitCmbClasses();
+                    }
+                }
+            }
+            else if (JobType.EXE.ToString().Equals(selectedType))
+            {
+                using (var ofd = new OpenFileDialog())
+                {
+                    ofd.Filter = "*.exe|*.exe";
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        txt_workPath.Text = ofd.FileName;
+                    }
+                }
+            }
+            else if (JobType.CMD.ToString().Equals(selectedType))
+            {
+                using (var fbd = new FolderBrowserDialog())
+                {
+                    fbd.Description = "选择工作目录";
+                    if (fbd.ShowDialog() == DialogResult.OK)
+                    {
+                        txt_workPath.Text = fbd.SelectedPath;
+                    }
+                }
+            }
+        }
+
+        private void cmb_classes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            InitCmbMethods();
+        }
+        
         private bool CheckFormData()
         {
             var cron = txt_cron.Text;
             var workDir = txt_workPath.Text;
 
-            var cronItems = cron.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-            if (!(cron.Equals(Constant.ServerCron)  || cronItems.Length == 6 || cronItems.Length == 7))
+            var cronItems = cron.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (!(cron.Equals(Constant.ServerCron) || cronItems.Length == 6 || cronItems.Length == 7))
             {
                 MessageBox.Show("调度计划格式有误，必须为6位或7位,或一次性服务任务'-'");
                 return false;
             }
 
-            if (txt_workPath.Visible && !string.IsNullOrEmpty(workDir) && !Directory.Exists(workDir))
+            if (txt_cmd.Visible && !string.IsNullOrEmpty(workDir) && !Directory.Exists(workDir))
             {
                 MessageBox.Show("工作目录不存在");
                 return false;
             }
 
-            return true;
-        }
+            if (!txt_cmd.Visible && !File.Exists(workDir))
+            {
+                MessageBox.Show("工作文件不存在");
+                return false;
+            }
 
-        private void btn_cancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
+            if (txt_cmd.Visible && string.IsNullOrEmpty(txt_cmd.Text))
+            {
+                MessageBox.Show("无cmd命令");
+                return false;
+            }
+
+            return true;
         }
 
         private ManageJob GetJob()
@@ -121,7 +260,7 @@ namespace HlcJobManager
             {
                 job = new ManageJob();
             }
-            
+
             job.Name = txt_name.Text;
 
             Enum.TryParse(cmb_type.Text, out JobType jobType);
@@ -131,13 +270,13 @@ namespace HlcJobManager
 
             job.Enable = "启用".Equals(cmb_enable.Text);
 
-            job.FilePath = txt_filePath.Text;
-
             job.WorkPath = txt_workPath.Text;
 
-            job.ClassName = txt_className.Text;
+            job.Command = txt_cmd.Text;
 
-            job.MethodName = txt_methodName.Text;
+            job.ClassName = cmb_classes.Text;
+
+            job.MethodName = cmb_methods.Text;
 
             job.Params.Clear();
 
@@ -154,96 +293,53 @@ namespace HlcJobManager
             return job;
         }
 
-        private void cmb_type_SelectedIndexChanged(object sender, EventArgs e)
+        private void FillJob(ManageJob job)
         {
-            var selectedType = cmb_type.Text;
-            if (JobType.DLL.ToString().Equals(selectedType))
+            txt_name.Text = job.Name;
+            cmb_type.Text = job.Type.ToString();
+            txt_cron.Text = job.Cron;
+            cmb_enable.Text = job.Enable ? "启用" : "禁用";
+            txt_workPath.Text = job.WorkPath;
+            txt_cmd.Text = job.Command;
+
+            InitCmbClasses();
+            cmb_classes.Text = job.ClassName;
+
+            InitCmbMethods();
+            cmb_methods.Text = job.MethodName;
+
+            foreach (var param in job.Params)
             {
-                lb_filePath.Text = "dll路径：";
-                txt_filePath.Text = "";
-
-                dgv_params.Rows.Clear();
-                dgv_params.Enabled = true;
-                dgv_params.Visible = true;
-
-                txt_className.Text = "";
-                txt_className.Enabled = true;
-                txt_className.Visible = true;
-
-                txt_methodName.Text = "";
-                txt_methodName.Enabled = true;
-                txt_methodName.Visible = true;
-
-                lb_className.Visible = true;
-                lb_methodName.Visible = true;
-
-                txt_cron.Enabled = true;
-                txt_cron.Text = "";
-
-                lb_workPath.Visible = false;
-                txt_workPath.Text = "";
-                txt_workPath.Visible = false;
-
-                Height = 280;
+                dgv_params.Rows.Add(param);
             }
-            else if (JobType.EXE.ToString().Equals(selectedType))
+        }
+        
+        private void InitCmbClasses()
+        {
+            if (!JobType.DLL.ToString().Equals(cmb_type.Text) || !File.Exists(txt_workPath.Text))
             {
-                lb_filePath.Text = "exe路径：";
-                txt_filePath.Text = "";
-
-                dgv_params.Rows.Clear();
-                dgv_params.Enabled = true;
-                dgv_params.Visible = true;
-
-                txt_className.Text = "";
-                txt_className.Enabled = false;
-                txt_className.Visible = false;
-
-                txt_methodName.Text = "";
-                txt_methodName.Enabled = false;
-                txt_methodName.Visible = false;
-
-                lb_className.Visible = false;
-                lb_methodName.Visible = false;
-
-                txt_cron.Enabled = true;
-                txt_cron.Text = "";
-
-                lb_workPath.Visible = false;
-                txt_workPath.Text = "";
-                txt_workPath.Visible = false;
-
-                Height = 280;
+                return;
             }
-            else if(JobType.CMD.ToString().Equals(selectedType))
+            cmb_classes.Items.Clear();
+            var proxy = DynamicUtil.LoadDomain(txt_workPath.Text);
+            var allExportTypes = proxy.GetAllExportTypes().ToList();
+            allExportTypes.Sort();
+            cmb_classes.Items.AddRange(allExportTypes.ToArray());
+            DynamicUtil.UnloadDomain(proxy);
+        }
+        
+        private void InitCmbMethods()
+        {
+            if (!JobType.DLL.ToString().Equals(cmb_type.Text) || !File.Exists(txt_workPath.Text))
             {
-                lb_filePath.Text = "cmd命令：";
-                txt_filePath.Text = "";
-
-                dgv_params.Rows.Clear();
-                dgv_params.Enabled = false;
-                dgv_params.Visible = false;
-
-                txt_className.Text = "";
-                txt_className.Enabled = false;
-                txt_className.Visible = false;
-
-                txt_methodName.Text = "";
-                txt_methodName.Enabled = false;
-                txt_methodName.Visible = false;
-
-                lb_className.Visible = false;
-                lb_methodName.Visible = false;
-
-                txt_cron.Enabled = true;
-                txt_cron.Text = "";
-
-                lb_workPath.Visible = true;
-                txt_workPath.Text = "";
-                txt_workPath.Visible = true;
-
-                Height = 200;
+                return;
             }
+            cmb_methods.Items.Clear();
+            var proxy = DynamicUtil.LoadDomain(txt_workPath.Text);
+            var allMethodes = proxy.GetMethodes(cmb_classes.Text).ToList();
+            allMethodes.Sort();
+            cmb_methods.Items.AddRange(allMethodes.ToArray());
+            DynamicUtil.UnloadDomain(proxy);
         }
     }
 }

@@ -265,50 +265,6 @@ namespace HlcJobService
         }
 
         /// <summary>
-        /// 执行CMD任务
-        /// </summary>
-        /// <param name="job"></param>
-        private void InvokeCmdJob(ManageJob job)
-        {
-            NotifyClientLog(job.Id, "================= CMD任务准备运行 =================");
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            _logger.Info($"执行CMD任务：{job.Name}[{job.FilePath}]");
-            
-            var jobFilePath = job.FilePath;
-
-            var match = Regex.Match(jobFilePath, "((?<exe>(\".+\")|(.+))? (?<args>.+))|(?<exe>(\".+\")|(.+))");
-            var exe = match.Groups["exe"].Value;
-            var arguments = match.Groups["args"]?.Value ?? "";
-
-            Process process = new Process();
-            process.StartInfo.FileName = exe;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = job.WorkPath;
-            process.StartInfo.CreateNoWindow = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.OutputDataReceived += (sender, args) =>
-            {
-                NotifyClientLog(job.Id, args.Data);
-            };
-            process.ErrorDataReceived += (sender, args) =>
-            {
-                NotifyClientLog(job.Id, args.Data);
-            };
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-            process.WaitForExit();
-
-            NotifyClientLog(job.Id, $"================= CMD任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
-        }
-
-        /// <summary>
         /// 执行EXE任务
         /// </summary>
         /// <param name="job"></param>
@@ -321,14 +277,14 @@ namespace HlcJobService
 
             var @params = job.Params.ToArray();
 
-            _logger.Info($"执行EXE任务：{job.Name}[{job.FilePath}({string.Join(",", @params)})]");
+            _logger.Info($"执行EXE任务：{job.Name}[{job.WorkPath}({string.Join(",", @params)})]");
 
             var writer = new HlcTextWriter();
             writer.WriteHandler += str =>
             {
                 NotifyClientLog(job.Id, str);
             };
-            var domainProxy = DynamicUtil.LoadDomain(job.FilePath);
+            var domainProxy = DynamicUtil.LoadDomain(job.WorkPath);
             domainProxy.SetOut(writer);
             var invokeExe = domainProxy.InvokeEntryPoint(@params);
             
@@ -340,39 +296,6 @@ namespace HlcJobService
             NotifyClientLog(job.Id, $"================= EXE任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
         }
 
-        /// <summary>
-        /// 执行DLL任务
-        /// </summary>
-        /// <param name="job"></param>
-        private void InvokeDllJob(ManageJob job)
-        {
-            NotifyClientLog(job.Id, "================= DLL任务准备运行 =================");
-
-            var stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            var types = job.Params.Select(p => typeof(string)).ToArray();
-            var @params = job.Params.ToArray();
-
-            _logger.Info($"执行DLL任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
-
-            var writer = new HlcTextWriter();
-            writer.WriteHandler += str =>
-            {
-                NotifyClientLog(job.Id, str);
-            };
-            var domainProxy = DynamicUtil.LoadDomain(job.FilePath);
-            domainProxy.SetOut(writer);
-            var invokeDll = domainProxy.Invoke(job.ClassName, job.MethodName, types, @params);
-
-            if (invokeDll != null)
-            {
-                NotifyClientLog(job.Id, $"DLL任务返回值:{invokeDll.ToString()}");
-            }
-
-            NotifyClientLog(job.Id, $"================= DLL任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
-        }
-         
         /// <summary>
         /// 执行EXE服务
         /// </summary>
@@ -400,15 +323,15 @@ namespace HlcJobService
 
                 NotifyClientLog(job.Id, "================= EXE Server准备运行 ==================");
 
-                _logger.Info($"执行DLL Server任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
+                _logger.Info($"执行DLL Server任务：{job.Name}[{job.WorkPath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
 
                 var writer = new HlcTextWriter();
                 writer.WriteHandler += str =>
                 {
                     NotifyClientLog(job.Id, str);
                 };
-                
-                var domainProxy = DynamicUtil.LoadDomain(job.FilePath);
+
+                var domainProxy = DynamicUtil.LoadDomain(job.WorkPath);
                 _domainDict[job.Id] = domainProxy;
                 domainProxy.SetOut(writer);
                 var result = domainProxy.InvokeEntryPoint(@params);
@@ -418,10 +341,10 @@ namespace HlcJobService
                 }
             }, () =>
             {
-                NotifyClientLog(job.Id, "EXE Server 运行完了？？ 完了？？？");
+                //NotifyClientLog(job.Id, "EXE Server 运行完了？？ 完了？？？");
                 DynamicUtil.UnloadDomain(_domainDict[job.Id]);
                 _domainDict.Remove(job.Id);
-                Jobs[jobIndex].State = JobState.Error;
+                Jobs[jobIndex].State = JobState.Complete;
 
                 NotifyClientLog(job.Id, "================= EXE Server运行结束 ==================");
                 UpdateClientJob(Jobs[jobIndex]);
@@ -445,6 +368,39 @@ namespace HlcJobService
             });
         }
 
+        /// <summary>
+        /// 执行DLL任务
+        /// </summary>
+        /// <param name="job"></param>
+        private void InvokeDllJob(ManageJob job)
+        {
+            NotifyClientLog(job.Id, "================= DLL任务准备运行 =================");
+
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            var types = job.Params.Select(p => typeof(string)).ToArray();
+            var @params = job.Params.ToArray();
+
+            _logger.Info($"执行DLL任务：{job.Name}[{job.WorkPath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
+
+            var writer = new HlcTextWriter();
+            writer.WriteHandler += str =>
+            {
+                NotifyClientLog(job.Id, str);
+            };
+            var domainProxy = DynamicUtil.LoadDomain(job.WorkPath);
+            domainProxy.SetOut(writer);
+            var invokeDll = domainProxy.Invoke(job.ClassName, job.MethodName, types, @params);
+
+            if (invokeDll != null)
+            {
+                NotifyClientLog(job.Id, $"DLL任务返回值:{invokeDll.ToString()}");
+            }
+
+            NotifyClientLog(job.Id, $"================= DLL任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
+        }
+        
         /// <summary>
         /// 执行DLL服务
         /// </summary>
@@ -473,7 +429,7 @@ namespace HlcJobService
 
                 NotifyClientLog(job.Id, "================= DLL Server准备运行 ==================");
 
-                _logger.Info($"执行DLL Server任务：{job.Name}[{job.FilePath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
+                _logger.Info($"执行DLL Server任务：{job.Name}[{job.WorkPath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
 
                 var writer = new HlcTextWriter();
                 writer.WriteHandler += str =>
@@ -481,7 +437,7 @@ namespace HlcJobService
                     NotifyClientLog(job.Id, str);
                 };
 
-                var domainProxy = DynamicUtil.LoadDomain(job.FilePath);
+                var domainProxy = DynamicUtil.LoadDomain(job.WorkPath);
                 _domainDict[job.Id] = domainProxy;
                 domainProxy.SetOut(writer);
                 var result = domainProxy.Invoke(job.ClassName, job.MethodName, types, @params);
@@ -492,10 +448,10 @@ namespace HlcJobService
 
             }, () =>
             {
-                NotifyClientLog(job.Id, "DLL Server 运行完了？？ 完了？？？");
+                //NotifyClientLog(job.Id, "DLL Server 运行完了？？ 完了？？？");
                 DynamicUtil.UnloadDomain(_domainDict[job.Id]);
                 _domainDict.Remove(job.Id);
-                Jobs[jobIndex].State = JobState.Error;
+                Jobs[jobIndex].State = JobState.Complete;
 
                 NotifyClientLog(job.Id, "================= DLL Server运行结束 ==================");
                 UpdateClientJob(Jobs[jobIndex]);
@@ -518,7 +474,51 @@ namespace HlcJobService
                 }
             });
         }
+        
+        /// <summary>
+        /// 执行CMD任务
+        /// </summary>
+        /// <param name="job"></param>
+        private void InvokeCmdJob(ManageJob job)
+        {
+            NotifyClientLog(job.Id, "================= CMD任务准备运行 =================");
 
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            _logger.Info($"执行CMD任务：{job.Name}[{job.Command}]");
+
+            var cmd = job.Command;
+
+            var match = Regex.Match(cmd, "((?<exe>(\".+\")|(.+))? (?<args>.+))|(?<exe>(\".+\")|(.+))");
+            var exe = match.Groups["exe"].Value;
+            var arguments = match.Groups["args"]?.Value ?? "";
+
+            Process process = new Process();
+            process.StartInfo.FileName = exe;
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.WorkingDirectory = job.WorkPath;
+            process.StartInfo.CreateNoWindow = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.OutputDataReceived += (sender, args) =>
+            {
+                NotifyClientLog(job.Id, args.Data);
+            };
+            process.ErrorDataReceived += (sender, args) =>
+            {
+                NotifyClientLog(job.Id, args.Data);
+            };
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+
+            NotifyClientLog(job.Id, $"================= CMD任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
+        }
+        
         /// <summary>
         /// 执行CMD服务
         /// </summary>
@@ -544,7 +544,7 @@ namespace HlcJobService
 
                 NotifyClientLog(job.Id, "================= CMD Server准备运行 ==================");
 
-                _logger.Info($"执行CMD Server任务：{job.Name}[{job.FilePath}]");
+                _logger.Info($"执行CMD Server任务：{job.Name}[{job.WorkPath}]");
 
                 var writer = new HlcTextWriter();
                 writer.WriteHandler += str =>
@@ -552,9 +552,9 @@ namespace HlcJobService
                     NotifyClientLog(job.Id, str);
                 };
                 
-                var jobFilePath = job.FilePath;
+                var cmd = job.Command;
 
-                var match = Regex.Match(jobFilePath, "((?<exe>(\".+\")|(.+))? (?<args>.+))|(?<exe>(\".+\")|(.+))");
+                var match = Regex.Match(cmd, "((?<exe>(\".+\")|(.+))? (?<args>.+))|(?<exe>(\".+\")|(.+))");
                 var exe = match.Groups["exe"].Value;
                 var arguments = match.Groups["args"]?.Value??"";
 
@@ -584,8 +584,8 @@ namespace HlcJobService
             {
                 if (job.Enable)
                 {
-                    NotifyClientLog(job.Id, "CMD Server 运行完了？？ 完了？？？");
-                    Jobs[jobIndex].State = JobState.Error;
+                    //NotifyClientLog(job.Id, "CMD Server 运行完了？？ 完了？？？");
+                    Jobs[jobIndex].State = JobState.Complete;
                 }
 
                 DeleteJob(job.Id);
@@ -625,10 +625,10 @@ namespace HlcJobService
             xmlJob.SetAttribute("name", job.Name);
             xmlJob.SetAttribute("type", job.Type.ToString());
             xmlJob.SetAttribute("cron", job.Cron);
-            xmlJob.SetAttribute("filePath", job.FilePath);
-            xmlJob.SetAttribute("workPath", job.WorkPath);
-            xmlJob.SetAttribute("className", job.ClassName);
-            xmlJob.SetAttribute("methodName", job.MethodName);
+            xmlJob.SetAttribute("path", job.WorkPath);
+            xmlJob.SetAttribute("cmd", job.Command);
+            xmlJob.SetAttribute("class", job.ClassName);
+            xmlJob.SetAttribute("method", job.MethodName);
             xmlJob.SetAttribute("enable", job.Enable.ToString());
             xmlJob.SetAttribute("rank", job.Rank.ToString());
 
@@ -661,16 +661,16 @@ namespace HlcJobService
             var cron = xmlJob.GetAttribute("cron");
             job.Cron = cron;
 
-            var filePath = xmlJob.GetAttribute("filePath");
-            job.FilePath = filePath;
-
-            var workPath = xmlJob.GetAttribute("workPath");
+            var workPath = xmlJob.GetAttribute("path");
             job.WorkPath = workPath;
+            
+            var filePath = xmlJob.GetAttribute("cmd");
+            job.Command = filePath;
 
-            var className = xmlJob.GetAttribute("className");
+            var className = xmlJob.GetAttribute("class");
             job.ClassName = className;
 
-            var methodName = xmlJob.GetAttribute("methodName");
+            var methodName = xmlJob.GetAttribute("method");
             job.MethodName = methodName;
 
             var enable = xmlJob.GetAttribute("enable");
