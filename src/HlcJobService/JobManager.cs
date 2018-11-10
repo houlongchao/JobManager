@@ -8,6 +8,7 @@ using System.Xml;
 using HlcJobCommon;
 using HlcJobCommon.Wcf;
 using HlcJobService.Quartz;
+using HLC.Common.Extends;
 using HLC.Common.IO;
 using HLC.Common.Utils;
 using NLog;
@@ -51,14 +52,8 @@ namespace HlcJobService
                 _scheduler.Start();
 
                 _jobs = new List<ManageJob>();
-                var xmlDoc = new XmlDocument();
-                xmlDoc.Load(Constant.ManageJobsDataFile);
-                var xmlJobs = xmlDoc.GetElementsByTagName("Job");
-                foreach (XmlElement xmlJob in xmlJobs)
-                {
-                    var job = GetJobFromXml(xmlJob);
-                    _jobs.Add(job);
-                }
+
+                LoadJobs();
             }
             catch (Exception e)
             {
@@ -90,12 +85,88 @@ namespace HlcJobService
         }
 
         /// <summary>
+        /// 从数据文件加载数据
+        /// </summary>
+        private void LoadJobs()
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(Constant.ManageJobsDataFile);
+            var manageJobs = xmlDoc.GetElementsByTagName("ManageJobs");
+            var version = manageJobs[0].Attributes?["version"]?.Value.ToInt(-1);
+            if (version < 0)    // 如果没有数据版本，则忽略不加载数据
+            {
+                return;
+            }
+            var xmlJobs = xmlDoc.GetElementsByTagName("Job");
+            foreach (XmlElement xmlJob in xmlJobs)
+            {
+                switch (version)
+                {
+                    case 1:
+                        _jobs.Add(GetJobFromXml_1(xmlJob));
+                        break;
+                    case 2:
+                        //_jobs.Add(GetJobFromXml_2(xmlJob));
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从XML获得ManageJob,版本2
+        /// </summary>
+        /// <param name="xmlJob"></param>
+        /// <returns></returns>
+        private ManageJob GetJobFromXml_1(XmlElement xmlJob)
+        {
+            var job = new ManageJob();
+
+            var name = xmlJob.GetAttribute("name");
+            job.Name = name;
+
+            var type = xmlJob.GetAttribute("type");
+            Enum.TryParse(type, out JobType jobType);
+            job.Type = jobType;
+
+            var cron = xmlJob.GetAttribute("cron");
+            job.Cron = cron;
+
+            var workPath = xmlJob.GetAttribute("path");
+            job.WorkPath = workPath;
+
+            var filePath = xmlJob.GetAttribute("cmd");
+            job.Command = filePath;
+
+            var className = xmlJob.GetAttribute("class");
+            job.ClassName = className;
+
+            var methodName = xmlJob.GetAttribute("method");
+            job.MethodName = methodName;
+
+            var enable = xmlJob.GetAttribute("enable");
+            bool.TryParse(enable, out bool jobEnable);
+            job.Enable = jobEnable;
+
+            var rank = xmlJob.GetAttribute("rank");
+            int.TryParse(rank, out int jobRank);
+            job.Rank = jobRank;
+
+            foreach (XmlElement xmlParam in xmlJob.GetElementsByTagName("param"))
+            {
+                job.Params.Add(xmlParam.Attributes["value"].Value);
+            }
+
+            return job;
+        }
+        
+        /// <summary>
         /// 将Job持久化保存到文件中
         /// </summary>
         public void SaveJobs()
         {
             var xmlDoc = new XmlDocument();
             var rootJobs = xmlDoc.CreateElement("ManageJobs");
+            rootJobs.SetAttribute("version", "1");
             foreach (var job in Jobs)
             {
                 var xmlJob = CreateXmlJob(xmlDoc, job);
@@ -103,6 +174,36 @@ namespace HlcJobService
             }
             xmlDoc.AppendChild(rootJobs);
             xmlDoc.Save(Constant.ManageJobsDataFile);
+        }
+
+        /// <summary>
+        /// 从ManageJob创建XML
+        /// </summary>
+        /// <param name="xmlDoc"></param>
+        /// <param name="job"></param>
+        /// <returns></returns>
+        private XmlElement CreateXmlJob(XmlDocument xmlDoc, ManageJob job)
+        {
+            var xmlJob = xmlDoc.CreateElement("Job");
+            xmlJob.SetAttribute("id", job.Id);
+            xmlJob.SetAttribute("name", job.Name);
+            xmlJob.SetAttribute("type", job.Type.ToString());
+            xmlJob.SetAttribute("cron", job.Cron);
+            xmlJob.SetAttribute("path", job.WorkPath);
+            xmlJob.SetAttribute("cmd", job.Command);
+            xmlJob.SetAttribute("class", job.ClassName);
+            xmlJob.SetAttribute("method", job.MethodName);
+            xmlJob.SetAttribute("enable", job.Enable.ToString());
+            xmlJob.SetAttribute("rank", job.Rank.ToString());
+
+            foreach (var param in job.Params)
+            {
+                var xmlParam = xmlDoc.CreateElement("param");
+                xmlParam.SetAttribute("value", param);
+                xmlJob.AppendChild(xmlParam);
+            }
+
+            return xmlJob;
         }
 
         /// <summary>
@@ -610,83 +711,6 @@ namespace HlcJobService
                     UpdateClientJob(Jobs[jobIndex]);
                 }
             });
-        }
-
-        /// <summary>
-        /// 从ManageJob创建XML
-        /// </summary>
-        /// <param name="xmlDoc"></param>
-        /// <param name="job"></param>
-        /// <returns></returns>
-        private XmlElement CreateXmlJob(XmlDocument xmlDoc, ManageJob job)
-        {
-            var xmlJob = xmlDoc.CreateElement("Job");
-            xmlJob.SetAttribute("id", job.Id);
-            xmlJob.SetAttribute("name", job.Name);
-            xmlJob.SetAttribute("type", job.Type.ToString());
-            xmlJob.SetAttribute("cron", job.Cron);
-            xmlJob.SetAttribute("path", job.WorkPath);
-            xmlJob.SetAttribute("cmd", job.Command);
-            xmlJob.SetAttribute("class", job.ClassName);
-            xmlJob.SetAttribute("method", job.MethodName);
-            xmlJob.SetAttribute("enable", job.Enable.ToString());
-            xmlJob.SetAttribute("rank", job.Rank.ToString());
-
-            foreach (var param in job.Params)
-            {
-                var xmlParam = xmlDoc.CreateElement("param");
-                xmlParam.SetAttribute("value", param);
-                xmlJob.AppendChild(xmlParam);
-            }
-
-            return xmlJob;
-        }
-
-        /// <summary>
-        /// 从XML获得ManageJob
-        /// </summary>
-        /// <param name="xmlJob"></param>
-        /// <returns></returns>
-        private ManageJob GetJobFromXml(XmlElement xmlJob)
-        {
-            var job = new ManageJob();
-
-            var name = xmlJob.GetAttribute("name");
-            job.Name = name;
-
-            var type = xmlJob.GetAttribute("type");
-            Enum.TryParse(type, out JobType jobType);
-            job.Type = jobType;
-
-            var cron = xmlJob.GetAttribute("cron");
-            job.Cron = cron;
-
-            var workPath = xmlJob.GetAttribute("path");
-            job.WorkPath = workPath;
-            
-            var filePath = xmlJob.GetAttribute("cmd");
-            job.Command = filePath;
-
-            var className = xmlJob.GetAttribute("class");
-            job.ClassName = className;
-
-            var methodName = xmlJob.GetAttribute("method");
-            job.MethodName = methodName;
-
-            var enable = xmlJob.GetAttribute("enable");
-            bool.TryParse(enable, out bool jobEnable);
-            job.Enable = jobEnable;
-
-            var rank = xmlJob.GetAttribute("rank");
-            int.TryParse(rank, out int jobRank);
-            job.Rank = jobRank;
-
-            foreach (XmlElement xmlParam in xmlJob.GetElementsByTagName("param"))
-            {
-                job.Params.Add(xmlParam.Attributes["value"].Value);
-            }
-
-            return job;
         }
 
         /// <summary>
