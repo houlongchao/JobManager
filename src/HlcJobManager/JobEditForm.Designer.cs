@@ -137,8 +137,10 @@
             // 
             this.txt_workPath.Location = new System.Drawing.Point(91, 76);
             this.txt_workPath.Name = "txt_workPath";
+            this.txt_workPath.ReadOnly = true;
             this.txt_workPath.Size = new System.Drawing.Size(366, 21);
             this.txt_workPath.TabIndex = 5;
+            this.txt_workPath.TabStop = false;
             // 
             // lb_className
             // 
@@ -241,8 +243,7 @@
             this.btn_selectPath.Location = new System.Drawing.Point(463, 76);
             this.btn_selectPath.Name = "btn_selectPath";
             this.btn_selectPath.Size = new System.Drawing.Size(27, 23);
-            this.btn_selectPath.TabIndex = 10;
-            this.btn_selectPath.TabStop = false;
+            this.btn_selectPath.TabIndex = 5;
             this.btn_selectPath.Text = "..";
             this.btn_selectPath.UseVisualStyleBackColor = true;
             this.btn_selectPath.Click += new System.EventHandler(this.btn_selectPath_Click);

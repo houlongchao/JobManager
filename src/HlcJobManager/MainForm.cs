@@ -269,6 +269,11 @@ namespace HlcJobManager
 
             _logDict[selectedJob.Id].Clear();
         }
+        
+        private void cbx_wordWrap_CheckedChanged(object sender, EventArgs e)
+        {
+            txt_log.WordWrap = cbx_wordWrap.Checked;
+        }
 
         #endregion Log Button Event
 
@@ -793,8 +798,7 @@ namespace HlcJobManager
                 });
         }
         #endregion
-
-     }
+    }
 
     enum ServerStatus
     {

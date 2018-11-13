@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -375,25 +376,13 @@ namespace HlcJobService
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
-
-            var @params = job.Params.ToArray();
-
-            _logger.Info($"执行EXE任务：{job.Name}[{job.WorkPath}({string.Join(",", @params)})]");
-
-            var writer = new HlcTextWriter();
-            writer.WriteHandler += str =>
-            {
-                NotifyClientLog(job.Id, str);
-            };
-            var domainProxy = DynamicUtil.LoadDomain(job.WorkPath);
-            domainProxy.SetOut(writer);
-            var invokeExe = domainProxy.InvokeEntryPoint(@params);
             
-            if (invokeExe != null)
-            {
-                NotifyClientLog(job.Id, $"EXE任务返回值:{invokeExe.ToString()}");
-            }
+            var args = string.Join(" ", job.Params);
+
+            _logger.Info($"执行EXE任务：{job.Name}[{job.WorkPath}({args})]");
             
+            ExecProcessAndWait(job.Id, job.WorkPath, args, Directory.GetParent(job.WorkPath).FullName);
+
             NotifyClientLog(job.Id, $"================= EXE任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
         }
 
@@ -403,7 +392,7 @@ namespace HlcJobService
         /// <param name="job"></param>
         private void InvokeExeServer(ManageJob job)
         {
-            var @params = job.Params.ToArray();
+            var args = string.Join(" ", job.Params);
 
             var jobIndex = Jobs.FindIndex(j => j.Id.Equals(job.Id));
             if (jobIndex < 0)
@@ -424,27 +413,12 @@ namespace HlcJobService
 
                 NotifyClientLog(job.Id, "================= EXE Server准备运行 ==================");
 
-                _logger.Info($"执行DLL Server任务：{job.Name}[{job.WorkPath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
-
-                var writer = new HlcTextWriter();
-                writer.WriteHandler += str =>
-                {
-                    NotifyClientLog(job.Id, str);
-                };
-
-                var domainProxy = DynamicUtil.LoadDomain(job.WorkPath);
-                _domainDict[job.Id] = domainProxy;
-                domainProxy.SetOut(writer);
-                var result = domainProxy.InvokeEntryPoint(@params);
-                if (result != null)
-                {
-                    NotifyClientLog(job.Id, $"EXE Server 返回值:{result.ToString()}");
-                }
+                _logger.Info($"执行EXE Server任务：{job.Name}[{job.WorkPath} ({args})]");
+                
+                ExecProcessAndWait(job.Id, job.WorkPath, args, Directory.GetParent(job.WorkPath).FullName);
+                
             }, () =>
             {
-                //NotifyClientLog(job.Id, "EXE Server 运行完了？？ 完了？？？");
-                DynamicUtil.UnloadDomain(_domainDict[job.Id]);
-                _domainDict.Remove(job.Id);
                 Jobs[jobIndex].State = JobState.Complete;
 
                 NotifyClientLog(job.Id, "================= EXE Server运行结束 ==================");
@@ -460,8 +434,6 @@ namespace HlcJobService
                     _logger.Error(exception);
                     NotifyClientLog(job.Id, "EXE Server 出异常了。" + exception.Message);
                     Jobs[jobIndex].State = JobState.Error;
-                    DynamicUtil.UnloadDomain(_domainDict[job.Id]);
-                    _domainDict.Remove(job.Id);
 
                     NotifyClientLog(job.Id, "================= EXE Server运行出错 ==================");
                     UpdateClientJob(Jobs[jobIndex]);
@@ -595,27 +567,7 @@ namespace HlcJobService
             var exe = match.Groups["exe"].Value;
             var arguments = match.Groups["args"]?.Value ?? "";
 
-            Process process = new Process();
-            process.StartInfo.FileName = exe;
-            process.StartInfo.Arguments = arguments;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WorkingDirectory = job.WorkPath;
-            process.StartInfo.CreateNoWindow = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-            process.StartInfo.RedirectStandardInput = true;
-            process.OutputDataReceived += (sender, args) =>
-            {
-                NotifyClientLog(job.Id, args.Data);
-            };
-            process.ErrorDataReceived += (sender, args) =>
-            {
-                NotifyClientLog(job.Id, args.Data);
-            };
-            process.Start();
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-            process.WaitForExit();
+            ExecProcessAndWait(job.Id, exe, arguments, job.WorkPath);
 
             NotifyClientLog(job.Id, $"================= CMD任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
         }
@@ -646,12 +598,6 @@ namespace HlcJobService
                 NotifyClientLog(job.Id, "================= CMD Server准备运行 ==================");
 
                 _logger.Info($"执行CMD Server任务：{job.Name}[{job.WorkPath}]");
-
-                var writer = new HlcTextWriter();
-                writer.WriteHandler += str =>
-                {
-                    NotifyClientLog(job.Id, str);
-                };
                 
                 var cmd = job.Command;
 
@@ -659,33 +605,11 @@ namespace HlcJobService
                 var exe = match.Groups["exe"].Value;
                 var arguments = match.Groups["args"]?.Value??"";
 
-                Process process = new Process();
-                process.StartInfo.FileName = exe;
-                process.StartInfo.Arguments = arguments;
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.WorkingDirectory = job.WorkPath;
-                process.StartInfo.CreateNoWindow = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.RedirectStandardInput = true;
-                process.OutputDataReceived += (sender, args) =>
-                {
-                    NotifyClientLog(job.Id, args.Data);
-                };
-                process.ErrorDataReceived += (sender, args) =>
-                {
-                    NotifyClientLog(job.Id, args.Data);
-                };
-                process.Start();
-                process.BeginOutputReadLine();
-                process.BeginErrorReadLine();
-                _processDict[job.Id] = process;
-                process.WaitForExit();
+                ExecProcessAndWait(job.Id, exe, arguments, job.WorkPath);
             }, () =>
             {
                 if (job.Enable)
                 {
-                    //NotifyClientLog(job.Id, "CMD Server 运行完了？？ 完了？？？");
                     Jobs[jobIndex].State = JobState.Complete;
                 }
 
@@ -711,6 +635,39 @@ namespace HlcJobService
                     UpdateClientJob(Jobs[jobIndex]);
                 }
             });
+        }
+
+        /// <summary>
+        /// 执行程序并等待结束
+        /// </summary>
+        /// <param name="jobId">任务Id</param>
+        /// <param name="fileName">程序路径</param>
+        /// <param name="arguments">参数</param>
+        /// <param name="workPath">工作路径</param>
+        private void ExecProcessAndWait(string jobId, string fileName, string arguments, string workPath)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = fileName;
+            process.StartInfo.Arguments = arguments;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.WorkingDirectory = workPath;
+            process.StartInfo.CreateNoWindow = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+            process.StartInfo.RedirectStandardInput = true;
+            process.OutputDataReceived += (sender, args) =>
+            {
+                NotifyClientLog(jobId, args.Data);
+            };
+            process.ErrorDataReceived += (sender, args) =>
+            {
+                NotifyClientLog(jobId, args.Data);
+            };
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            _processDict[jobId] = process;
+            process.WaitForExit();
         }
 
         /// <summary>
@@ -765,6 +722,11 @@ namespace HlcJobService
             if (string.IsNullOrWhiteSpace(message))
             {
                 return;
+            }
+
+            if (message.Length > 500)
+            {
+                message = message.Substring(0, 497) + "...";
             }
 
             var log = $"[{DateTime.Now:HH:mm:ss.ffff}] | {message}";

@@ -54,6 +54,7 @@
             this.btn_installSvc = new System.Windows.Forms.Button();
             this.lb_version = new System.Windows.Forms.Label();
             this.lb_author = new System.Windows.Forms.Label();
+            this.cbx_wordWrap = new System.Windows.Forms.CheckBox();
             this.pl_main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spl_main)).BeginInit();
             this.spl_main.Panel1.SuspendLayout();
@@ -189,10 +190,11 @@
             this.txt_log.Multiline = true;
             this.txt_log.Name = "txt_log";
             this.txt_log.ReadOnly = true;
-            this.txt_log.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txt_log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txt_log.Size = new System.Drawing.Size(641, 227);
             this.txt_log.TabIndex = 0;
             this.txt_log.TabStop = false;
+            this.txt_log.WordWrap = false;
             // 
             // gbx_jobTool
             // 
@@ -246,6 +248,7 @@
             // 
             this.gbx_logTool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbx_logTool.Controls.Add(this.cbx_wordWrap);
             this.gbx_logTool.Controls.Add(this.btn_clearLog);
             this.gbx_logTool.Controls.Add(this.btn_viewLog);
             this.gbx_logTool.Location = new System.Drawing.Point(660, 290);
@@ -351,6 +354,18 @@
             this.lb_author.Text = "By:侯龙超";
             this.lb_author.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // cbx_wordWrap
+            // 
+            this.cbx_wordWrap.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbx_wordWrap.AutoSize = true;
+            this.cbx_wordWrap.Location = new System.Drawing.Point(24, 87);
+            this.cbx_wordWrap.Name = "cbx_wordWrap";
+            this.cbx_wordWrap.Size = new System.Drawing.Size(72, 16);
+            this.cbx_wordWrap.TabIndex = 1;
+            this.cbx_wordWrap.Text = "自动换行";
+            this.cbx_wordWrap.UseVisualStyleBackColor = true;
+            this.cbx_wordWrap.CheckedChanged += new System.EventHandler(this.cbx_wordWrap_CheckedChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -377,6 +392,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgv_data)).EndInit();
             this.gbx_jobTool.ResumeLayout(false);
             this.gbx_logTool.ResumeLayout(false);
+            this.gbx_logTool.PerformLayout();
             this.gbx_serviceTool.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -409,6 +425,7 @@
         private System.Windows.Forms.Label lb_version;
         private System.Windows.Forms.Button btn_clearLog;
         private System.Windows.Forms.Label lb_author;
+        private System.Windows.Forms.CheckBox cbx_wordWrap;
     }
 }
 

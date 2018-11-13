@@ -10,6 +10,11 @@ namespace ExeJob
             Console.WriteLine("exe 启动了");
             Console.WriteLine($"现在时间是{DateTime.Now}");
             Console.WriteLine($"接下来我睡10秒钟");
+            Console.WriteLine(args?.Length);
+            for (int i = 0; args != null && i < args.Length; i++)
+            {
+                Console.WriteLine(args[i]);
+            }
 
             for (int i = 0; i < 10; i++)
             {
