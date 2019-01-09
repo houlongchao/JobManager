@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceProcess;
@@ -304,6 +305,22 @@ namespace HlcJobManager
                     {
                         delJob();
                     });
+
+                    if (job.Type == JobType.CMD && Directory.Exists(job.WorkPath))
+                    {
+                        menu.MenuItems.Add("打开工作目录", (o, args) =>
+                        {
+                            DynamicUtil.InvokeCmd($"Explorer.exe /root, \"{job.WorkPath}\"");
+                        });
+                    }
+                    else if(File.Exists(job.WorkPath))
+                    {
+                        menu.MenuItems.Add("打开文件路径", (o, args) =>
+                        {
+                            DynamicUtil.InvokeCmd($"Explorer.exe /select, \"{job.WorkPath}\"");
+                        });
+                    }
+                    
 
                     menu.Show(dgv_data, new Point(cellLocation.X + e.X, cellLocation.Y + e.Y));
                 }

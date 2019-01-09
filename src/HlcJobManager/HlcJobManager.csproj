@@ -128,9 +128,9 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetDir)*" "$(SolutionDir)\output" /I /S /Y
-del "$(SolutionDir)\output\*.pdb"
-del "$(SolutionDir)\output\*.xml"
-del "$(SolutionDir)\output\*.log"
-rm -r -d "$(SolutionDir)\output\logs"</PostBuildEvent>
+del /S /Q "$(SolutionDir)\output\*.pdb"
+del /S /Q "$(SolutionDir)\output\*.xml"
+del /S /Q "$(SolutionDir)\output\*.log"
+del /S /Q "$(SolutionDir)\output\logs"</PostBuildEvent>
   </PropertyGroup>
 </Project>

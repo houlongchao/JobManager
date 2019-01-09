@@ -46,6 +46,7 @@
             this.btn_addJob = new System.Windows.Forms.Button();
             this.btn_viewLog = new System.Windows.Forms.Button();
             this.gbx_logTool = new System.Windows.Forms.GroupBox();
+            this.cbx_wordWrap = new System.Windows.Forms.CheckBox();
             this.btn_clearLog = new System.Windows.Forms.Button();
             this.gbx_serviceTool = new System.Windows.Forms.GroupBox();
             this.btn_uninstallSvc = new System.Windows.Forms.Button();
@@ -54,7 +55,6 @@
             this.btn_installSvc = new System.Windows.Forms.Button();
             this.lb_version = new System.Windows.Forms.Label();
             this.lb_author = new System.Windows.Forms.Label();
-            this.cbx_wordWrap = new System.Windows.Forms.CheckBox();
             this.pl_main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spl_main)).BeginInit();
             this.spl_main.Panel1.SuspendLayout();
@@ -206,7 +206,7 @@
             this.gbx_jobTool.Size = new System.Drawing.Size(115, 124);
             this.gbx_jobTool.TabIndex = 1;
             this.gbx_jobTool.TabStop = false;
-            this.gbx_jobTool.Text = "任务控制栏";
+            this.gbx_jobTool.Text = "任务服务控制栏";
             // 
             // btn_refreshJobs
             // 
@@ -258,6 +258,18 @@
             this.gbx_logTool.TabStop = false;
             this.gbx_logTool.Text = "日志控制栏";
             // 
+            // cbx_wordWrap
+            // 
+            this.cbx_wordWrap.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.cbx_wordWrap.AutoSize = true;
+            this.cbx_wordWrap.Location = new System.Drawing.Point(24, 87);
+            this.cbx_wordWrap.Name = "cbx_wordWrap";
+            this.cbx_wordWrap.Size = new System.Drawing.Size(72, 16);
+            this.cbx_wordWrap.TabIndex = 1;
+            this.cbx_wordWrap.Text = "自动换行";
+            this.cbx_wordWrap.UseVisualStyleBackColor = true;
+            this.cbx_wordWrap.CheckedChanged += new System.EventHandler(this.cbx_wordWrap_CheckedChanged);
+            // 
             // btn_clearLog
             // 
             this.btn_clearLog.Anchor = System.Windows.Forms.AnchorStyles.Top;
@@ -282,7 +294,7 @@
             this.gbx_serviceTool.Size = new System.Drawing.Size(115, 146);
             this.gbx_serviceTool.TabIndex = 2;
             this.gbx_serviceTool.TabStop = false;
-            this.gbx_serviceTool.Text = "服务控制栏";
+            this.gbx_serviceTool.Text = "宿主服务控制栏";
             // 
             // btn_uninstallSvc
             // 
@@ -353,18 +365,6 @@
             this.lb_author.TabIndex = 0;
             this.lb_author.Text = "By:侯龙超";
             this.lb_author.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // cbx_wordWrap
-            // 
-            this.cbx_wordWrap.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.cbx_wordWrap.AutoSize = true;
-            this.cbx_wordWrap.Location = new System.Drawing.Point(24, 87);
-            this.cbx_wordWrap.Name = "cbx_wordWrap";
-            this.cbx_wordWrap.Size = new System.Drawing.Size(72, 16);
-            this.cbx_wordWrap.TabIndex = 1;
-            this.cbx_wordWrap.Text = "自动换行";
-            this.cbx_wordWrap.UseVisualStyleBackColor = true;
-            this.cbx_wordWrap.CheckedChanged += new System.EventHandler(this.cbx_wordWrap_CheckedChanged);
             // 
             // MainForm
             // 
