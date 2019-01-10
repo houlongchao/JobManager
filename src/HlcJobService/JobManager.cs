@@ -241,7 +241,7 @@ namespace HlcJobService
                     }
                     catch (Exception e)
                     {
-                        _logger.Warn(e, $"任务【{job.Name}】调度出错");
+                        _logger.Warn(e, $"Job【{job.Name}】Schedule Error");
                     }
                     
                 }
@@ -301,7 +301,7 @@ namespace HlcJobService
             }
             catch (Exception e)
             {
-                _logger.Warn(e, $"任务【{job.Name}】调度更新时出错");
+                _logger.Warn(e, $"Update Job【{job.Name}】Schedule Error");
             }
         }
 
@@ -338,7 +338,7 @@ namespace HlcJobService
                     InvokeCmdJob(job);
                     break;
                 default:
-                    _logger.Warn($"未知的Job类型【{job.Type}】");
+                    _logger.Warn($"Unkonw Job Type【{job.Type}】");
                     break;
             }
         }
@@ -361,7 +361,7 @@ namespace HlcJobService
                     InvokeCmdServer(job);
                     break;
                 default:
-                    _logger.Warn($"未知的Job类型【{job.Type}】");
+                    _logger.Warn($"Unkonw Job Type【{job.Type}】");
                     break;
             }
         }
@@ -372,18 +372,18 @@ namespace HlcJobService
         /// <param name="job"></param>
         private void InvokeExeJob(ManageJob job)
         {
-            NotifyClientLog(job.Id, "================= EXE任务准备运行 =================");
+            NotifyClientLog(job.Id, "================= EXE Job Running =================");
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             
             var args = string.Join(" ", job.Params);
 
-            _logger.Info($"执行EXE任务：{job.Name}[{job.WorkPath}({args})]");
+            _logger.Info($"Execute exe Job：{job.Name}[{job.WorkPath}({args})]");
             
             ExecProcessAndWait(job.Id, job.WorkPath, args, Directory.GetParent(job.WorkPath).FullName);
 
-            NotifyClientLog(job.Id, $"================= EXE任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
+            NotifyClientLog(job.Id, $"================= EXE Finished, Elapsed [{stopwatch.Elapsed:g}] =================");
         }
 
         /// <summary>
@@ -411,9 +411,9 @@ namespace HlcJobService
                 Jobs[jobIndex].PreviousFireTime = DateTimeOffset.Now;
                 UpdateClientJob(Jobs[jobIndex]);
 
-                NotifyClientLog(job.Id, "================= EXE Server准备运行 ==================");
+                NotifyClientLog(job.Id, "================= EXE Server Running ==================");
 
-                _logger.Info($"执行EXE Server任务：{job.Name}[{job.WorkPath} ({args})]");
+                _logger.Info($"Execute EXE Server Job：{job.Name}[{job.WorkPath} ({args})]");
                 
                 ExecProcessAndWait(job.Id, job.WorkPath, args, Directory.GetParent(job.WorkPath).FullName);
                 
@@ -421,21 +421,21 @@ namespace HlcJobService
             {
                 Jobs[jobIndex].State = JobState.Complete;
 
-                NotifyClientLog(job.Id, "================= EXE Server运行结束 ==================");
+                NotifyClientLog(job.Id, "================= EXE Server Finished ==================");
                 UpdateClientJob(Jobs[jobIndex]);
             }, exception =>
             {
                 if (exception is AppDomainUnloadedException)
                 {
-                    NotifyClientLog(job.Id, "================= EXE Server已被卸载 ==================");
+                    NotifyClientLog(job.Id, "================= EXE Server Uninstalled ==================");
                 }
                 else
                 {
                     _logger.Error(exception);
-                    NotifyClientLog(job.Id, "EXE Server 出异常了。" + exception.Message);
+                    NotifyClientLog(job.Id, "EXE Server Error。" + exception.Message);
                     Jobs[jobIndex].State = JobState.Error;
 
-                    NotifyClientLog(job.Id, "================= EXE Server运行出错 ==================");
+                    NotifyClientLog(job.Id, "================= EXE Server Error ==================");
                     UpdateClientJob(Jobs[jobIndex]);
                 }
             });
@@ -447,7 +447,7 @@ namespace HlcJobService
         /// <param name="job"></param>
         private void InvokeDllJob(ManageJob job)
         {
-            NotifyClientLog(job.Id, "================= DLL任务准备运行 =================");
+            NotifyClientLog(job.Id, "================= DLL Running =================");
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -455,7 +455,7 @@ namespace HlcJobService
             var types = job.Params.Select(p => typeof(string)).ToArray();
             var @params = job.Params.ToArray();
 
-            _logger.Info($"执行DLL任务：{job.Name}[{job.WorkPath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
+            _logger.Info($"Execute DLL Job：{job.Name}[{job.WorkPath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
 
             var writer = new HlcTextWriter();
             writer.WriteHandler += str =>
@@ -468,10 +468,10 @@ namespace HlcJobService
 
             if (invokeDll != null)
             {
-                NotifyClientLog(job.Id, $"DLL任务返回值:{invokeDll.ToString()}");
+                NotifyClientLog(job.Id, $"DLL Result:{invokeDll.ToString()}");
             }
 
-            NotifyClientLog(job.Id, $"================= DLL任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
+            NotifyClientLog(job.Id, $"================= DLL Job Finished, Elapsed [{stopwatch.Elapsed:g}] =================");
         }
         
         /// <summary>
@@ -500,9 +500,9 @@ namespace HlcJobService
                 Jobs[jobIndex].PreviousFireTime = DateTimeOffset.Now;
                 UpdateClientJob(Jobs[jobIndex]);
 
-                NotifyClientLog(job.Id, "================= DLL Server准备运行 ==================");
+                NotifyClientLog(job.Id, "================= DLL Server Running ==================");
 
-                _logger.Info($"执行DLL Server任务：{job.Name}[{job.WorkPath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
+                _logger.Info($"Execute DLL Server Job：{job.Name}[{job.WorkPath}, {job.ClassName},{job.MethodName} ({string.Join(",", @params)})]");
 
                 var writer = new HlcTextWriter();
                 writer.WriteHandler += str =>
@@ -516,7 +516,7 @@ namespace HlcJobService
                 var result = domainProxy.Invoke(job.ClassName, job.MethodName, types, @params);
                 if (result != null)
                 {
-                    NotifyClientLog(job.Id, $"DLL Server 返回值:{result.ToString()}");
+                    NotifyClientLog(job.Id, $"DLL Server Result:{result.ToString()}");
                 }
 
             }, () =>
@@ -526,23 +526,23 @@ namespace HlcJobService
                 _domainDict.Remove(job.Id);
                 Jobs[jobIndex].State = JobState.Complete;
 
-                NotifyClientLog(job.Id, "================= DLL Server运行结束 ==================");
+                NotifyClientLog(job.Id, "================= DLL Server Finished ==================");
                 UpdateClientJob(Jobs[jobIndex]);
             }, exception =>
             {
                 if (exception is AppDomainUnloadedException)
                 {
-                    NotifyClientLog(job.Id, "================= DLL Server已被卸载 ==================");
+                    NotifyClientLog(job.Id, "================= DLL Server Uninstalled ==================");
                 }
                 else
                 {
                     _logger.Error(exception);
-                    NotifyClientLog(job.Id, "Server 出异常了。" + exception.Message);
+                    NotifyClientLog(job.Id, "Server Error。" + exception.Message);
                     Jobs[jobIndex].State = JobState.Error;
                     DynamicUtil.UnloadDomain(_domainDict[job.Id]);
                     _domainDict.Remove(job.Id);
 
-                    NotifyClientLog(job.Id, "================= DLL Server运行出错 ==================");
+                    NotifyClientLog(job.Id, "================= DLL Server Error ==================");
                     UpdateClientJob(Jobs[jobIndex]);
                 }
             });
@@ -554,12 +554,12 @@ namespace HlcJobService
         /// <param name="job"></param>
         private void InvokeCmdJob(ManageJob job)
         {
-            NotifyClientLog(job.Id, "================= CMD任务准备运行 =================");
+            NotifyClientLog(job.Id, "================= CMD Running =================");
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            _logger.Info($"执行CMD任务：{job.Name}[{job.Command}]");
+            _logger.Info($"Execute CMD Job：{job.Name}[{job.Command}]");
 
             var cmd = job.Command;
 
@@ -569,7 +569,7 @@ namespace HlcJobService
 
             ExecProcessAndWait(job.Id, exe, arguments, job.WorkPath);
 
-            NotifyClientLog(job.Id, $"================= CMD任务执行成功, 用时[{stopwatch.Elapsed:g}] =================");
+            NotifyClientLog(job.Id, $"================= CMD Finished, Elapsed [{stopwatch.Elapsed:g}] =================");
         }
         
         /// <summary>
@@ -595,9 +595,9 @@ namespace HlcJobService
                 Jobs[jobIndex].PreviousFireTime = DateTimeOffset.Now;
                 UpdateClientJob(Jobs[jobIndex]);
 
-                NotifyClientLog(job.Id, "================= CMD Server准备运行 ==================");
+                NotifyClientLog(job.Id, "================= CMD Server Running ==================");
 
-                _logger.Info($"执行CMD Server任务：{job.Name}[{job.WorkPath}]");
+                _logger.Info($"Execute CMD Server Job：{job.Name}[{job.WorkPath}]");
                 
                 var cmd = job.Command;
 
@@ -615,23 +615,23 @@ namespace HlcJobService
 
                 DeleteJob(job.Id);
 
-                NotifyClientLog(job.Id, "================= CMD Server运行结束 ==================");
+                NotifyClientLog(job.Id, "================= CMD Server Finished ==================");
                 UpdateClientJob(Jobs[jobIndex]);
             }, exception =>
             {
                 if (exception is AppDomainUnloadedException)
                 {
-                    NotifyClientLog(job.Id, "================= CMD Server已被卸载 ==================");
+                    NotifyClientLog(job.Id, "================= CMD Server Uninstalled ==================");
                 }
                 else
                 {
                     _logger.Error(exception);
-                    NotifyClientLog(job.Id, "CMD Server 出异常了。" + exception.Message);
+                    NotifyClientLog(job.Id, "CMD Server Error。" + exception.Message);
                     Jobs[jobIndex].State = JobState.Error;
 
                     DeleteJob(job.Id);
 
-                    NotifyClientLog(job.Id, "================= CMD Server运行出错 ==================");
+                    NotifyClientLog(job.Id, "================= CMD Server Error ==================");
                     UpdateClientJob(Jobs[jobIndex]);
                 }
             });
@@ -780,7 +780,7 @@ namespace HlcJobService
             {
                 DynamicUtil.UnloadDomain(_domainDict[jobId]);
                 _domainDict.Remove(jobId);
-                NotifyClientLog(jobId, "停止原有任务");
+                NotifyClientLog(jobId, "Stop Old Job");
             }
 
             if (_processDict.ContainsKey(jobId))
@@ -794,7 +794,7 @@ namespace HlcJobService
                     }
                 }
                 _processDict.Remove(jobId);
-                NotifyClientLog(jobId, "停止原有任务");
+                NotifyClientLog(jobId, "Stop Old Job");
             }
         }
     }

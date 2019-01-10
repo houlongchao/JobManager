@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using HlcJobCommon;
 using HlcJobCommon.Wcf;
+using HlcJobManager.Properties;
 using HlcJobManager.Wcf;
 using HLC.Common.Utils;
 using NLog;
@@ -28,8 +29,8 @@ namespace HlcJobManager
             cmb_type.Items.Add(JobType.EXE);
             cmb_type.Items.Add(JobType.CMD);
 
-            cmb_enable.Items.Add("启用");
-            cmb_enable.Items.Add("禁用");
+            cmb_enable.Items.Add(Resources.Enable);
+            cmb_enable.Items.Add(Resources.Disable);
 
 
             _jobManagerProxy = new JobManagerProxy();
@@ -45,10 +46,7 @@ namespace HlcJobManager
         private void JobEditForm_Load(object sender, EventArgs e)
         {
             var toolTip = new ToolTip();
-            toolTip.SetToolTip(img_help,@"(-)一个减号，表示一次性服务，只启动一次。
-(0/10 * * * * ?)表示调度计划，每10秒运行一次
-调度计划由7段构成(秒 分 时 日 月 星期 年(可选))
-详细调度计划编写可查阅Quartz的cron表达式");
+            toolTip.SetToolTip(img_help, Resources.CronHelp);
         }
 
         private void btn_ok_Click(object sender, EventArgs e)
@@ -89,7 +87,7 @@ namespace HlcJobManager
             var selectedType = cmb_type.Text;
             if (JobType.DLL.ToString().Equals(selectedType))
             {
-                lb_workPath.Text = "dll路径：";
+                lb_workPath.Text = Resources.JobEditForm_Lable_dllPath;
                 txt_workPath.Text = "";
 
                 dgv_params.Rows.Clear();
@@ -118,7 +116,7 @@ namespace HlcJobManager
             }
             else if (JobType.EXE.ToString().Equals(selectedType))
             {
-                lb_workPath.Text = "exe路径：";
+                lb_workPath.Text = Resources.JobEditForm_Lable_exePath;
                 txt_workPath.Text = "";
 
                 dgv_params.Rows.Clear();
@@ -147,7 +145,7 @@ namespace HlcJobManager
             }
             else if(JobType.CMD.ToString().Equals(selectedType))
             {
-                lb_workPath.Text = "工作目录：";
+                lb_workPath.Text = Resources.JobEditForm_Lable_workPath;
                 txt_workPath.Text = "";
 
                 dgv_params.Rows.Clear();
@@ -206,7 +204,7 @@ namespace HlcJobManager
             {
                 using (var fbd = new FolderBrowserDialog())
                 {
-                    fbd.Description = "选择工作目录";
+                    fbd.Description = Resources.JobEditForm_PleaseSelectWorkPath;
                     if (fbd.ShowDialog() == DialogResult.OK)
                     {
                         txt_workPath.Text = fbd.SelectedPath;
@@ -228,25 +226,25 @@ namespace HlcJobManager
             var cronItems = cron.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (!(cron.Equals(Constant.ServerCron) || cronItems.Length == 6 || cronItems.Length == 7))
             {
-                MessageBox.Show("调度计划格式有误，必须为6位或7位,或一次性服务任务'-'");
+                MessageBox.Show(Resources.JobEditForm_CronErrorMessage);
                 return false;
             }
 
             if (txt_cmd.Visible && !string.IsNullOrEmpty(workDir) && !Directory.Exists(workDir))
             {
-                MessageBox.Show("工作目录不存在");
+                MessageBox.Show(Resources.JobEditForm_WorkPathNotExist);
                 return false;
             }
 
             if (!txt_cmd.Visible && !File.Exists(workDir))
             {
-                MessageBox.Show("工作文件不存在");
+                MessageBox.Show(Resources.JobEditForm_WorkFileNotExist);
                 return false;
             }
 
             if (txt_cmd.Visible && string.IsNullOrEmpty(txt_cmd.Text))
             {
-                MessageBox.Show("无cmd命令");
+                MessageBox.Show(Resources.JobEditForm_NoCmd);
                 return false;
             }
 
@@ -268,7 +266,7 @@ namespace HlcJobManager
 
             job.Cron = txt_cron.Text;
 
-            job.Enable = "启用".Equals(cmb_enable.Text);
+            job.Enable = Resources.Enable.Equals(cmb_enable.Text);
 
             job.WorkPath = txt_workPath.Text;
 
@@ -298,7 +296,7 @@ namespace HlcJobManager
             txt_name.Text = job.Name;
             cmb_type.Text = job.Type.ToString();
             txt_cron.Text = job.Cron;
-            cmb_enable.Text = job.Enable ? "启用" : "禁用";
+            cmb_enable.Text = job.Enable ? Resources.Enable : Resources.Disable;
             txt_workPath.Text = job.WorkPath;
             txt_cmd.Text = job.Command;
 

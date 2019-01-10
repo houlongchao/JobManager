@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using HlcJobCommon;
 using HlcJobCommon.Wcf;
+using HlcJobManager.Properties;
 using HlcJobManager.Wcf;
 using HLC.Common.Utils;
 using NLog;
@@ -61,7 +61,8 @@ namespace HlcJobManager
         {
             InitializeComponent();
             _title = Text;
-            lb_version.Text = ProductVersion;
+            var version = new Version(ProductVersion);
+            lb_version.Text = $"Ver: {version.Major}.{version.Minor}";
 
             _jobManagerProxy = new JobManagerProxy();
             _logger = NLog.LogManager.GetCurrentClassLogger();
@@ -87,8 +88,8 @@ namespace HlcJobManager
             }
             catch (EndpointNotFoundException ex)
             {
-                _logger.Error(ex, "未找到服务");
-                MessageBox.Show("未找到服务");
+                _logger.Error(ex, "Service Not Found.");
+                MessageBox.Show(Resources.NotFoundService);
             }
 
             JobManagerCallback.WriteLogHandler += AddLog;
@@ -101,7 +102,7 @@ namespace HlcJobManager
         {
             if (JobService != null)
             {
-                MessageBox.Show("服务已存在", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Resources.ServiceExisted, Resources.MessageBox_Title_Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             AsyncUtil.Run(() =>
@@ -111,7 +112,7 @@ namespace HlcJobManager
                 DynamicUtil.InvokeCmd("HlcJobService install");
             }, RefreshServerStatus, exception =>
             {
-                _logger.Error(exception, "安装服务出错");
+                _logger.Error(exception, "Install Service Error");
             });
         }
 
@@ -119,13 +120,13 @@ namespace HlcJobManager
         {
             if (JobService == null)
             {
-                MessageBox.Show("请先安装服务", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Resources.PleaseInstallService, Resources.MessageBox_Title_Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             if (JobService.Status == ServiceControllerStatus.Running)
             {
-                MessageBox.Show("服务正在运行", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Resources.ServiceRunning, Resources.MessageBox_Title_Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -140,7 +141,7 @@ namespace HlcJobManager
                 RefreshJobView();
             }, exception =>
             {
-                _logger.Error(exception, "启动服务出错");
+                _logger.Error(exception, "Start Service Error");
             });
         }
 
@@ -148,16 +149,16 @@ namespace HlcJobManager
         {
             if (JobService == null)
             {
-                MessageBox.Show("未发现服务", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Resources.ServiceNotFound, Resources.MessageBox_Title_Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
             if (JobService.Status == ServiceControllerStatus.Stopped)
             {
-                MessageBox.Show("服务已停止", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Resources.ServiceStoped, Resources.MessageBox_Title_Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            if (MessageBox.Show("确定要停止宿主服务（将会关闭所有任务）？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBox.Show(Resources.Confirm_StopHost, Resources.MessageBox_Title_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
@@ -169,7 +170,7 @@ namespace HlcJobManager
                 DynamicUtil.InvokeCmd("HlcJobService stop");
             }, RefreshServerStatus, exception =>
             {
-                _logger.Error(exception, "停止服务出错");
+                _logger.Error(exception, "Stop Service Error");
             });
         }
 
@@ -177,10 +178,10 @@ namespace HlcJobManager
         {
             if (JobService == null)
             {
-                MessageBox.Show("服务不存在", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(Resources.ServiceNotFound, Resources.MessageBox_Title_Information, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            if (MessageBox.Show("确定要卸载宿主服务（将会关闭所有任务）？", "警告", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBox.Show(Resources.Confirm_UninstallHost, Resources.MessageBox_Title_Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
@@ -192,7 +193,7 @@ namespace HlcJobManager
                 DynamicUtil.InvokeCmd("HlcJobService uninstall");
             }, RefreshServerStatus, exception =>
             {
-                _logger.Error(exception, "卸载服务出错");
+                _logger.Error(exception, "Uninstall Service Error");
             });
         }
 
@@ -224,13 +225,13 @@ namespace HlcJobManager
         {
             if (JobService == null)
             {
-                MessageBox.Show("请先安装服务", "提示", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(Resources.PleaseInstallService, Resources.MessageBox_Title_Information, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
 
             if (JobService.Status != ServiceControllerStatus.Running)
             {
-                MessageBox.Show("请先启动服务", "提示", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show(Resources.PleaseStartService, Resources.MessageBox_Title_Information, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                 return;
             }
 
@@ -252,11 +253,11 @@ namespace HlcJobManager
 
             if (spl_main.Panel2Collapsed)
             {
-                btn_viewLog.Text = "查看日志";
+                btn_viewLog.Text = Resources.LogView_Show;
             }
             else
             {
-                btn_viewLog.Text = "隐藏日志";
+                btn_viewLog.Text = Resources.LogView_Hide;
             }
         }
 
@@ -298,25 +299,25 @@ namespace HlcJobManager
                 {
                     var menu = new ContextMenu();
 
-                    menu.MenuItems.Add(job.Enable ? "禁用" : "启用", (o, args) =>
+                    menu.MenuItems.Add(job.Enable ? Resources.Disable : Resources.Enable, (o, args) =>
                     {
                         SwitchJobEnable(job);
                     });
-                    menu.MenuItems.Add("删除", (o, args) =>
+                    menu.MenuItems.Add(Resources.Delete, (o, args) =>
                     {
                         delJob();
                     });
 
                     if (job.Type == JobType.CMD && Directory.Exists(job.WorkPath))
                     {
-                        menu.MenuItems.Add("打开工作目录", (o, args) =>
+                        menu.MenuItems.Add(Resources.OpenWorkPath, (o, args) =>
                         {
                             DynamicUtil.InvokeCmd($"Explorer.exe /root, \"{job.WorkPath}\"");
                         });
                     }
                     else if(File.Exists(job.WorkPath))
                     {
-                        menu.MenuItems.Add("打开文件路径", (o, args) =>
+                        menu.MenuItems.Add(Resources.OpenWorkFile, (o, args) =>
                         {
                             DynamicUtil.InvokeCmd($"Explorer.exe /select, \"{job.WorkPath}\"");
                         });
@@ -401,7 +402,7 @@ namespace HlcJobManager
 
             var selectedJob = SelectedJob;
 
-            var result = MessageBox.Show($"确定要删除任务【{selectedJob.Name}】吗？", "提示", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var result = MessageBox.Show(string.Format(Resources.Comfirm_DeleteJob__jobname, selectedJob.Name), Resources.MessageBox_Title_Information, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result != DialogResult.Yes)
             {
                 return;
@@ -412,7 +413,7 @@ namespace HlcJobManager
                 RefreshJobView();
             }, exception =>
             {
-                _logger.Error(exception, "删除任务出错");
+                _logger.Error(exception, "Delete Job Error");
                 RefreshJobView();
             });
         }
@@ -430,7 +431,7 @@ namespace HlcJobManager
                     RefreshJobView(jobs, selectedId);
                 }, exception =>
                 {
-                    _logger.Error(exception, "刷新任务出错");
+                    _logger.Error(exception, "Refresh Job Error");
                 });
             }
         }
@@ -509,7 +510,7 @@ namespace HlcJobManager
 
         private string JobEnable2Str(bool jobEnable)
         {
-            return jobEnable ? "启用" : "禁用";
+            return jobEnable ? Resources.Enable : Resources.Disable;
         }
 
         private string JobState2Str(JobState jobState)
@@ -517,19 +518,19 @@ namespace HlcJobManager
             switch (jobState)
             {
                 case JobState.Normal:
-                    return "正常";
+                    return Resources.Normal;
                 case JobState.Paused:
-                    return "暂停";
+                    return Resources.Paused;
                 case JobState.Complete:
-                    return "完成";
+                    return Resources.Complete;
                 case JobState.Error:
-                    return "出错";
+                    return Resources.Error;
                 case JobState.Blocked:
-                    return "锁定";
+                    return Resources.Blocked;
                 case JobState.None:
-                    return "无";
+                    return Resources.None;
                 default:
-                    return "无";
+                    return Resources.None;
             }
         }
 
@@ -586,7 +587,7 @@ namespace HlcJobManager
                     }
                 }, () => ShowLog(job), exception =>
                 {
-                    _logger.Error(exception, "获取缓存日志出错");
+                    _logger.Error(exception, "Get Cache Log Error");
                 });
                 return;
             }
@@ -745,37 +746,37 @@ namespace HlcJobManager
             switch (status)
             {
                 case ServerStatus.Null:
-                    RefreshStatusMsg("未发现服务");
+                    RefreshStatusMsg(Resources.ServiceNotFound);
                     break;
                 case ServerStatus.Installing:
-                    RefreshStatusMsg("服务安装中");
+                    RefreshStatusMsg(Resources.ServiceInstalling);
                     break;
                 case ServerStatus.Uninstalling:
-                    RefreshStatusMsg("服务卸载中");
+                    RefreshStatusMsg(Resources.ServiceUninstalling);
                     break;
                 case ServerStatus.StartPending:
-                    RefreshStatusMsg("服务正在启动");
+                    RefreshStatusMsg(Resources.ServiceStarting);
                     break;
                 case ServerStatus.StopPending:
-                    RefreshStatusMsg("服务正在停止");
+                    RefreshStatusMsg(Resources.ServiceStopping);
                     break;
                 case ServerStatus.PausePending:
-                    RefreshStatusMsg("服务正在暂停");
+                    RefreshStatusMsg(Resources.ServiceSuspending);
                     break;
                 case ServerStatus.ContinuePending:
-                    RefreshStatusMsg("服务被挂起");
+                    RefreshStatusMsg(Resources.ServiceSuspend);
                     break;
                 case ServerStatus.Running:
-                    RefreshStatusMsg("服务正在运行");
+                    RefreshStatusMsg(Resources.ServiceRunning);
                     break;
                 case ServerStatus.Stoped:
-                    RefreshStatusMsg("服务未运行");
+                    RefreshStatusMsg(Resources.ServiceStoped);
                     break;
                 case ServerStatus.Error:
-                    RefreshStatusMsg("未知错误");
+                    RefreshStatusMsg(Resources.ServiceError);
                     break;
                 default:
-                    RefreshStatusMsg("未知状态");
+                    RefreshStatusMsg(Resources.UnknownState);
                     break;
             }
 
@@ -812,7 +813,7 @@ namespace HlcJobManager
             AsyncUtil.Run(() => job.Enable ? _jobManagerProxy.DisableJob(job.Id) : _jobManagerProxy.EnableJob(job.Id),
                 result => { }, exception =>
                 {
-                    _logger.Error(exception, "切换任务状态出错");
+                    _logger.Error(exception, "Switch Job Status Error");
                 });
         }
         #endregion

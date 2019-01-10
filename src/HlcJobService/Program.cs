@@ -30,7 +30,7 @@ namespace HlcJobService
                 var srvDesc = ConfigurationManager.AppSettings["srvdesc"];
                 if (string.IsNullOrWhiteSpace(srvDesc))
                 {
-                    srvDesc = "HLC任务调度服务";
+                    srvDesc = "HLC JobManager Service";
                 }
 
                 HostFactory.Run(config =>

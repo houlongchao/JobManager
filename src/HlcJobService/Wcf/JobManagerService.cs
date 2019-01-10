@@ -63,8 +63,8 @@ namespace HlcJobService.Wcf
 
                 if (jobIndex < 0)
                 {
-                    _logger.Warn($"启用任务【{jobId}】失败，未找到任务【{jobId}】");
-                    JobManager.Instance.NotifyClientLog(jobId, $"启用任务失败，未找到任务");
+                    _logger.Warn($"Enable Job【{jobId}】Error，Not Found Job【{jobId}】");
+                    JobManager.Instance.NotifyClientLog(jobId, $"Enable Job Error. Not Found Job.");
                     return false;
                 }
 
@@ -73,15 +73,15 @@ namespace HlcJobService.Wcf
                 JobManager.Instance.SaveJobs();
                 JobManager.Instance.UpdateScheduler(jobId);
 
-                _logger.Info($"启用任务【{jobId}】成功");
-                JobManager.Instance.NotifyClientLog(jobId, $"启用任务成功");
+                _logger.Info($"Enable Job【{jobId}】Success");
+                JobManager.Instance.NotifyClientLog(jobId, $"Enable Job Success.");
 
                 return true;
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"启用任务【{jobId}】出错");
-                JobManager.Instance.NotifyClientLog(jobId, $"启用任务出错，{e.Message}");
+                _logger.Error(e, $"Enable Job【{jobId}】Error");
+                JobManager.Instance.NotifyClientLog(jobId, $"Enable Job Error，{e.Message}");
                 return false;
             }
         }
@@ -93,8 +93,8 @@ namespace HlcJobService.Wcf
                 var jobIndex = JobManager.Instance.Jobs.FindIndex(j => j.Id.Equals(jobId));
                 if (jobIndex < 0)
                 {
-                    _logger.Warn($"禁用任务【{jobId}】失败, 未找到任务【{jobId}】");
-                    JobManager.Instance.NotifyClientLog(jobId, $"禁用任务失败, 未找到任务");
+                    _logger.Warn($"Disable Job【{jobId}】Error, Not Found Job【{jobId}】");
+                    JobManager.Instance.NotifyClientLog(jobId, $"Disable Job Error, Not Found Job.");
                     return false;
                 }
 
@@ -103,14 +103,14 @@ namespace HlcJobService.Wcf
                 JobManager.Instance.SaveJobs();
                 JobManager.Instance.UpdateScheduler(jobId);
 
-                _logger.Info($"禁用任务【{jobId}】成功");
-                JobManager.Instance.NotifyClientLog(jobId, $"禁用任务成功");
+                _logger.Info($"Disable Job【{jobId}】Success");
+                JobManager.Instance.NotifyClientLog(jobId, $"Disable Job Success");
                 return true;
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"禁用任务【{jobId}】出错");
-                JobManager.Instance.NotifyClientLog(jobId, $"禁用任务出错, {e.Message}");
+                _logger.Error(e, $"Disable Job【{jobId}】Error.");
+                JobManager.Instance.NotifyClientLog(jobId, $"Disable Job Error, {e.Message}");
                 return false;
             }
         }
@@ -124,8 +124,8 @@ namespace HlcJobService.Wcf
 
                 if (job == null)
                 {
-                    _logger.Warn($"移除任务【{jobId}】失败，未找到任务【{jobId}】");
-                    JobManager.Instance.NotifyClientLog(jobId, $"移除任务失败，未找到任务");
+                    _logger.Warn($"Remove Job【{jobId}】Error，Not Found Job【{jobId}】");
+                    JobManager.Instance.NotifyClientLog(jobId, $"Remove Job Error, Not Found Job.");
                     return false;
                 }
 
@@ -134,15 +134,15 @@ namespace HlcJobService.Wcf
                 JobManager.Instance.SaveJobs();
                 JobManager.Instance.DeleteJob(job.Id);
 
-                _logger.Info($"移除任务【{jobId}】成功");
-                JobManager.Instance.NotifyClientLog(jobId, $"移除任务成功");
+                _logger.Info($"Remove Job【{jobId}】Success.");
+                JobManager.Instance.NotifyClientLog(jobId, $"Remove Job Success.");
 
                 return true;
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"移除任务【{jobId}】出错");
-                JobManager.Instance.NotifyClientLog(jobId, $"移除任务出错，{e.Message}");
+                _logger.Error(e, $"Remove Job【{jobId}】Error.");
+                JobManager.Instance.NotifyClientLog(jobId, $"Remove Job Error，{e.Message}");
                 return false;
             }
         }
@@ -153,8 +153,8 @@ namespace HlcJobService.Wcf
             {
                 if (job == null)
                 {
-                    _logger.Warn($"添加任务出错，任务为null");
-                    JobManager.Instance.NotifyClientLog("", $"添加任务出错，任务为null");
+                    _logger.Warn($"Add Job Error，Job is null");
+                    JobManager.Instance.NotifyClientLog("", $"Add Job Error, Job is null");
                     return false;
                 }
 
@@ -162,8 +162,8 @@ namespace HlcJobService.Wcf
 
                 if (oldJob != null)
                 {
-                    _logger.Warn($"添加任务【{job.Id}】出错，任务【{job.Id}】已存在.");
-                    JobManager.Instance.NotifyClientLog("", $"添加任务出错，任务已存在.");
+                    _logger.Warn($"Add Job【{job.Id}】Error，Job【{job.Id}】Existed.");
+                    JobManager.Instance.NotifyClientLog("", $"Add Job Error, Job Existed.");
                     return false;
                 }
 
@@ -181,15 +181,15 @@ namespace HlcJobService.Wcf
                 JobManager.Instance.SaveJobs();
                 JobManager.Instance.UpdateScheduler(job.Id);
 
-                _logger.Info($"添加任务【{job.Id}】成功");
-                JobManager.Instance.NotifyClientLog(job.Id, $"添加的任务成功");
+                _logger.Info($"Add Job【{job.Id}】Success.");
+                JobManager.Instance.NotifyClientLog(job.Id, $"Add Job Success.");
 
                 return true;
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"添加任务【{job?.Id}】出错");
-                JobManager.Instance.NotifyClientLog(job?.Id, $"添加任务出错，{e.Message}");
+                _logger.Error(e, $"Add Job【{job?.Id}】Error.");
+                JobManager.Instance.NotifyClientLog(job?.Id, $"Add Job Error，{e.Message}");
                 return false;
             }
         }
@@ -200,8 +200,8 @@ namespace HlcJobService.Wcf
             {
                 if (job == null)
                 {
-                    _logger.Warn($"更新任务失败，任务为null");
-                    JobManager.Instance.NotifyClientLog("", $"更新任务失败，任务为null");
+                    _logger.Warn($"Update Job Error, Job is null.");
+                    JobManager.Instance.NotifyClientLog("", $"Update Job Error, Job is null");
                     return false;
                 }
 
@@ -209,8 +209,8 @@ namespace HlcJobService.Wcf
 
                 if (jobIndex < 0)
                 {
-                    _logger.Warn($"更新任务【{job.Id}】失败, 未找到需要更新的任务【{job.Id}】");
-                    JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务失败, 未找到需要更新的任务");
+                    _logger.Warn($"Update Job【{job.Id}】Error, Not Found Job【{job.Id}】");
+                    JobManager.Instance.NotifyClientLog(job?.Id, $"Update Job Error, Not Found Job.");
                     return false;
                 }
 
@@ -219,15 +219,15 @@ namespace HlcJobService.Wcf
                 JobManager.Instance.SaveJobs();
                 JobManager.Instance.UpdateScheduler(job.Id);
 
-                _logger.Info($"更新任务【{job.Id}】成功");
-                JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务成功");
+                _logger.Info($"Update Job【{job.Id}】Success.");
+                JobManager.Instance.NotifyClientLog(job?.Id, $"Update Job Success.");
 
                 return true;
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"更新任务【{job?.Id}】出错");
-                JobManager.Instance.NotifyClientLog(job?.Id, $"更新任务出错，{e.Message}");
+                _logger.Error(e, $"Update Job【{job?.Id}】Error.");
+                JobManager.Instance.NotifyClientLog(job?.Id, $"Update Job Error，{e.Message}");
                 return false;
             }
         }
@@ -241,8 +241,8 @@ namespace HlcJobService.Wcf
 
                 if (job == null)
                 {
-                    _logger.Warn($"执行任务【{jobId}】失败，未找到任务【{jobId}】");
-                    JobManager.Instance.NotifyClientLog(jobId, $"执行任务失败，未找到任务");
+                    _logger.Warn($"Invoke【{jobId}】Error，Not Found Job【{jobId}】");
+                    JobManager.Instance.NotifyClientLog(jobId, $"Invoke Job Error, Not Found Job.");
                     return false;
                 }
 
@@ -255,14 +255,14 @@ namespace HlcJobService.Wcf
                     JobManager.Instance.InvokeJob(job);
                 }
 
-                JobManager.Instance.NotifyClientLog(jobId, $"执行任务成功");
+                JobManager.Instance.NotifyClientLog(jobId, $"Invoke Job Success.");
 
                 return true;
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"执行任务【{jobId}】出错");
-                JobManager.Instance.NotifyClientLog(jobId, $"执行任务出错，{e.Message}");
+                _logger.Error(e, $"Invoke Job【{jobId}】Error.");
+                JobManager.Instance.NotifyClientLog(jobId, $"Invoke Job Error，{e.Message}");
                 return false;
             }
         }
@@ -281,8 +281,8 @@ namespace HlcJobService.Wcf
 
                 if (jobIndex1 < 0 || jobIndex2 < 0)
                 {
-                    _logger.Warn($"交换任务位置【{jobId1}】【{jobId2}】失败");
-                    JobManager.Instance.NotifyClientLog("", $"交换位置失败, 未找到需要更新的任务");
+                    _logger.Warn($"Swap Job Rank【{jobId1}】【{jobId2}】Error.");
+                    JobManager.Instance.NotifyClientLog("", $"Swap Job Rank Error. Not Found Job.");
                     return false;
                 }
 
@@ -292,14 +292,14 @@ namespace HlcJobService.Wcf
 
                 JobManager.Instance.SaveJobs();
                 
-                JobManager.Instance.NotifyClientLog("", $"交换位置成功");
+                JobManager.Instance.NotifyClientLog("", $"Swap Job Rank Success.");
 
                 return true;
             }
             catch (Exception e)
             {
-                _logger.Error(e, $"交换任务位置【{jobId1}】【{jobId2}】失败");
-                JobManager.Instance.NotifyClientLog("", $"交换位置失败，{e.Message}");
+                _logger.Error(e, $"Swap Job Rank【{jobId1}】【{jobId2}】Error.");
+                JobManager.Instance.NotifyClientLog("", $"Swap Job Rank Error，{e.Message}");
                 return false;
             }
         }

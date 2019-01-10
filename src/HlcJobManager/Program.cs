@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace HlcJobManager
@@ -15,7 +17,7 @@ namespace HlcJobManager
         static void Main()
         {
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => NLog.LogManager.GetCurrentClassLogger().Fatal(args.ExceptionObject);
-
+            //CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Process instance = RunningInstance();

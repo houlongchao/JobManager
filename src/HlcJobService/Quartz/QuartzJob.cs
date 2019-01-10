@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using HlcJobCommon.Wcf;
 using NLog;
@@ -28,15 +27,15 @@ namespace HlcJobService.Quartz
             }
             catch (Exception e)
             {
-                _logger.Warn(e, "获取Job信息失败");
-                JobManager.Instance.NotifyClientLog(job?.Id, $"获取任务信息失败,{e.Message}");
+                _logger.Warn(e, "Get Job Info Error");
+                JobManager.Instance.NotifyClientLog(job?.Id, $"Get Job Info Error, {e.Message}");
                 return null;
             }
 
             if (job == null)
             {
-                _logger.Warn("执行Job失败，Job为空");
-                JobManager.Instance.NotifyClientLog("", $"执行任务失败，任务为null");
+                _logger.Warn("Execute Job Error. Job is null.");
+                JobManager.Instance.NotifyClientLog("", "xecute Job Error. Job is null.");
                 return null;
             }
 
@@ -48,8 +47,8 @@ namespace HlcJobService.Quartz
             }
             catch (Exception e)
             {
-                _logger.Warn(e, $"任务【{job.Name}】执行失败");
-                JobManager.Instance.NotifyClientLog(job.Id, $"任务【{job.Name}】执行失败,{e.Message}");
+                _logger.Warn(e, $"Job【{job.Name}】Execute Error");
+                JobManager.Instance.NotifyClientLog(job.Id, $"Job【{job.Name}】Execute Error, {e.Message}");
             }
 
             return Task.FromResult(true);

@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.pl_main = new System.Windows.Forms.Panel();
             this.spl_main = new System.Windows.Forms.SplitContainer();
             this.dgv_data = new System.Windows.Forms.DataGridView();
             this.cln_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -42,6 +41,7 @@
             this.cln_enable = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cln_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.txt_log = new System.Windows.Forms.TextBox();
+            this.pl_main = new System.Windows.Forms.Panel();
             this.gbx_jobTool = new System.Windows.Forms.GroupBox();
             this.btn_refreshJobs = new System.Windows.Forms.Button();
             this.btn_addJob = new System.Windows.Forms.Button();
@@ -57,50 +57,39 @@
             this.lb_version = new System.Windows.Forms.Label();
             this.lb_author = new System.Windows.Forms.Label();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.pl_main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spl_main)).BeginInit();
             this.spl_main.Panel1.SuspendLayout();
             this.spl_main.Panel2.SuspendLayout();
             this.spl_main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_data)).BeginInit();
+            this.pl_main.SuspendLayout();
             this.gbx_jobTool.SuspendLayout();
             this.gbx_logTool.SuspendLayout();
             this.gbx_serviceTool.SuspendLayout();
             this.SuspendLayout();
             // 
-            // pl_main
-            // 
-            this.pl_main.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pl_main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pl_main.Controls.Add(this.spl_main);
-            this.pl_main.Location = new System.Drawing.Point(9, 7);
-            this.pl_main.Name = "pl_main";
-            this.pl_main.Size = new System.Drawing.Size(643, 478);
-            this.pl_main.TabIndex = 0;
-            // 
             // spl_main
             // 
-            this.spl_main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.spl_main.Location = new System.Drawing.Point(0, 0);
+            resources.ApplyResources(this.spl_main, "spl_main");
             this.spl_main.Name = "spl_main";
-            this.spl_main.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
             // spl_main.Panel1
             // 
+            resources.ApplyResources(this.spl_main.Panel1, "spl_main.Panel1");
             this.spl_main.Panel1.Controls.Add(this.dgv_data);
+            this.toolTip.SetToolTip(this.spl_main.Panel1, resources.GetString("spl_main.Panel1.ToolTip"));
             // 
             // spl_main.Panel2
             // 
+            resources.ApplyResources(this.spl_main.Panel2, "spl_main.Panel2");
             this.spl_main.Panel2.Controls.Add(this.txt_log);
-            this.spl_main.Size = new System.Drawing.Size(641, 476);
-            this.spl_main.SplitterDistance = 245;
-            this.spl_main.TabIndex = 0;
+            this.toolTip.SetToolTip(this.spl_main.Panel2, resources.GetString("spl_main.Panel2.ToolTip"));
             this.spl_main.TabStop = false;
+            this.toolTip.SetToolTip(this.spl_main, resources.GetString("spl_main.ToolTip"));
             // 
             // dgv_data
             // 
+            resources.ApplyResources(this.dgv_data, "dgv_data");
             this.dgv_data.AllowUserToAddRows = false;
             this.dgv_data.AllowUserToDeleteRows = false;
             this.dgv_data.AllowUserToResizeRows = false;
@@ -114,16 +103,13 @@
             this.cln_nextTime,
             this.cln_enable,
             this.cln_state});
-            this.dgv_data.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgv_data.Location = new System.Drawing.Point(0, 0);
             this.dgv_data.MultiSelect = false;
             this.dgv_data.Name = "dgv_data";
             this.dgv_data.ReadOnly = true;
             this.dgv_data.RowHeadersVisible = false;
             this.dgv_data.RowTemplate.Height = 23;
             this.dgv_data.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgv_data.Size = new System.Drawing.Size(641, 245);
-            this.dgv_data.TabIndex = 0;
+            this.toolTip.SetToolTip(this.dgv_data, resources.GetString("dgv_data.ToolTip"));
             this.dgv_data.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_data_CellDoubleClick);
             this.dgv_data.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgv_data_CellMouseClick);
             this.dgv_data.SelectionChanged += new System.EventHandler(this.dgv_data_SelectionChanged);
@@ -131,271 +117,218 @@
             // 
             // cln_id
             // 
-            this.cln_id.HeaderText = "Id";
+            resources.ApplyResources(this.cln_id, "cln_id");
             this.cln_id.Name = "cln_id";
             this.cln_id.ReadOnly = true;
-            this.cln_id.Visible = false;
             // 
             // cln_name
             // 
             this.cln_name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cln_name.HeaderText = "名称";
+            resources.ApplyResources(this.cln_name, "cln_name");
             this.cln_name.Name = "cln_name";
             this.cln_name.ReadOnly = true;
             // 
             // cln_type
             // 
-            this.cln_type.HeaderText = "类型";
+            resources.ApplyResources(this.cln_type, "cln_type");
             this.cln_type.Name = "cln_type";
             this.cln_type.ReadOnly = true;
-            this.cln_type.Width = 60;
             // 
             // cln_cron
             // 
             this.cln_cron.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.cln_cron.HeaderText = "调度计划";
+            resources.ApplyResources(this.cln_cron, "cln_cron");
             this.cln_cron.Name = "cln_cron";
             this.cln_cron.ReadOnly = true;
             // 
             // cln_preTime
             // 
-            this.cln_preTime.HeaderText = "上次调用时间";
+            resources.ApplyResources(this.cln_preTime, "cln_preTime");
             this.cln_preTime.Name = "cln_preTime";
             this.cln_preTime.ReadOnly = true;
-            this.cln_preTime.Width = 130;
             // 
             // cln_nextTime
             // 
-            this.cln_nextTime.HeaderText = "下次调用时间";
+            resources.ApplyResources(this.cln_nextTime, "cln_nextTime");
             this.cln_nextTime.Name = "cln_nextTime";
             this.cln_nextTime.ReadOnly = true;
-            this.cln_nextTime.Width = 130;
             // 
             // cln_enable
             // 
-            this.cln_enable.HeaderText = "启用";
+            resources.ApplyResources(this.cln_enable, "cln_enable");
             this.cln_enable.Name = "cln_enable";
             this.cln_enable.ReadOnly = true;
-            this.cln_enable.Width = 60;
             // 
             // cln_state
             // 
-            this.cln_state.HeaderText = "状态";
+            resources.ApplyResources(this.cln_state, "cln_state");
             this.cln_state.Name = "cln_state";
             this.cln_state.ReadOnly = true;
-            this.cln_state.Width = 60;
             // 
             // txt_log
             // 
-            this.txt_log.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txt_log.Location = new System.Drawing.Point(0, 0);
-            this.txt_log.Multiline = true;
+            resources.ApplyResources(this.txt_log, "txt_log");
             this.txt_log.Name = "txt_log";
             this.txt_log.ReadOnly = true;
-            this.txt_log.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txt_log.Size = new System.Drawing.Size(641, 227);
-            this.txt_log.TabIndex = 0;
             this.txt_log.TabStop = false;
-            this.txt_log.WordWrap = false;
+            this.toolTip.SetToolTip(this.txt_log, resources.GetString("txt_log.ToolTip"));
+            // 
+            // pl_main
+            // 
+            resources.ApplyResources(this.pl_main, "pl_main");
+            this.pl_main.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pl_main.Controls.Add(this.spl_main);
+            this.pl_main.Name = "pl_main";
+            this.toolTip.SetToolTip(this.pl_main, resources.GetString("pl_main.ToolTip"));
             // 
             // gbx_jobTool
             // 
-            this.gbx_jobTool.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.gbx_jobTool, "gbx_jobTool");
             this.gbx_jobTool.Controls.Add(this.btn_refreshJobs);
             this.gbx_jobTool.Controls.Add(this.btn_addJob);
-            this.gbx_jobTool.Location = new System.Drawing.Point(661, 8);
             this.gbx_jobTool.Name = "gbx_jobTool";
-            this.gbx_jobTool.Size = new System.Drawing.Size(115, 124);
-            this.gbx_jobTool.TabIndex = 1;
             this.gbx_jobTool.TabStop = false;
-            this.gbx_jobTool.Text = "任务服务控制栏";
+            this.toolTip.SetToolTip(this.gbx_jobTool, resources.GetString("gbx_jobTool.ToolTip"));
             // 
             // btn_refreshJobs
             // 
-            this.btn_refreshJobs.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_refreshJobs.Location = new System.Drawing.Point(21, 37);
+            resources.ApplyResources(this.btn_refreshJobs, "btn_refreshJobs");
             this.btn_refreshJobs.Name = "btn_refreshJobs";
-            this.btn_refreshJobs.Size = new System.Drawing.Size(75, 23);
-            this.btn_refreshJobs.TabIndex = 0;
             this.btn_refreshJobs.TabStop = false;
-            this.btn_refreshJobs.Text = "刷新任务";
+            this.toolTip.SetToolTip(this.btn_refreshJobs, resources.GetString("btn_refreshJobs.ToolTip"));
             this.btn_refreshJobs.UseVisualStyleBackColor = true;
             this.btn_refreshJobs.Click += new System.EventHandler(this.btn_refreshJobs_Click);
             // 
             // btn_addJob
             // 
-            this.btn_addJob.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_addJob.Location = new System.Drawing.Point(22, 82);
+            resources.ApplyResources(this.btn_addJob, "btn_addJob");
             this.btn_addJob.Name = "btn_addJob";
-            this.btn_addJob.Size = new System.Drawing.Size(75, 23);
-            this.btn_addJob.TabIndex = 0;
             this.btn_addJob.TabStop = false;
-            this.btn_addJob.Text = "添加任务";
+            this.toolTip.SetToolTip(this.btn_addJob, resources.GetString("btn_addJob.ToolTip"));
             this.btn_addJob.UseVisualStyleBackColor = true;
             this.btn_addJob.Click += new System.EventHandler(this.btn_addJob_Click);
             // 
             // btn_viewLog
             // 
-            this.btn_viewLog.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_viewLog.Location = new System.Drawing.Point(22, 20);
+            resources.ApplyResources(this.btn_viewLog, "btn_viewLog");
             this.btn_viewLog.Name = "btn_viewLog";
-            this.btn_viewLog.Size = new System.Drawing.Size(75, 23);
-            this.btn_viewLog.TabIndex = 0;
             this.btn_viewLog.TabStop = false;
-            this.btn_viewLog.Text = "隐藏日志";
+            this.toolTip.SetToolTip(this.btn_viewLog, resources.GetString("btn_viewLog.ToolTip"));
             this.btn_viewLog.UseVisualStyleBackColor = true;
             this.btn_viewLog.Click += new System.EventHandler(this.btn_viewLog_Click);
             // 
             // gbx_logTool
             // 
-            this.gbx_logTool.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.gbx_logTool, "gbx_logTool");
             this.gbx_logTool.Controls.Add(this.cbx_wordWrap);
             this.gbx_logTool.Controls.Add(this.btn_clearLog);
             this.gbx_logTool.Controls.Add(this.btn_viewLog);
-            this.gbx_logTool.Location = new System.Drawing.Point(660, 290);
             this.gbx_logTool.Name = "gbx_logTool";
-            this.gbx_logTool.Size = new System.Drawing.Size(115, 144);
-            this.gbx_logTool.TabIndex = 2;
             this.gbx_logTool.TabStop = false;
-            this.gbx_logTool.Text = "日志控制栏";
+            this.toolTip.SetToolTip(this.gbx_logTool, resources.GetString("gbx_logTool.ToolTip"));
             // 
             // cbx_wordWrap
             // 
-            this.cbx_wordWrap.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.cbx_wordWrap.AutoSize = true;
-            this.cbx_wordWrap.Location = new System.Drawing.Point(24, 87);
+            resources.ApplyResources(this.cbx_wordWrap, "cbx_wordWrap");
             this.cbx_wordWrap.Name = "cbx_wordWrap";
-            this.cbx_wordWrap.Size = new System.Drawing.Size(72, 16);
-            this.cbx_wordWrap.TabIndex = 1;
-            this.cbx_wordWrap.Text = "自动换行";
+            this.toolTip.SetToolTip(this.cbx_wordWrap, resources.GetString("cbx_wordWrap.ToolTip"));
             this.cbx_wordWrap.UseVisualStyleBackColor = true;
             this.cbx_wordWrap.CheckedChanged += new System.EventHandler(this.cbx_wordWrap_CheckedChanged);
             // 
             // btn_clearLog
             // 
-            this.btn_clearLog.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btn_clearLog.Location = new System.Drawing.Point(22, 49);
+            resources.ApplyResources(this.btn_clearLog, "btn_clearLog");
             this.btn_clearLog.Name = "btn_clearLog";
-            this.btn_clearLog.Size = new System.Drawing.Size(75, 23);
-            this.btn_clearLog.TabIndex = 0;
             this.btn_clearLog.TabStop = false;
-            this.btn_clearLog.Text = "清空日志";
+            this.toolTip.SetToolTip(this.btn_clearLog, resources.GetString("btn_clearLog.ToolTip"));
             this.btn_clearLog.UseVisualStyleBackColor = true;
             this.btn_clearLog.Click += new System.EventHandler(this.btn_clearLog_Click);
             // 
             // gbx_serviceTool
             // 
-            this.gbx_serviceTool.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.gbx_serviceTool, "gbx_serviceTool");
             this.gbx_serviceTool.Controls.Add(this.btn_uninstallSvc);
             this.gbx_serviceTool.Controls.Add(this.btn_stopSvc);
             this.gbx_serviceTool.Controls.Add(this.btn_startSvc);
             this.gbx_serviceTool.Controls.Add(this.btn_installSvc);
-            this.gbx_serviceTool.Location = new System.Drawing.Point(661, 138);
             this.gbx_serviceTool.Name = "gbx_serviceTool";
-            this.gbx_serviceTool.Size = new System.Drawing.Size(115, 146);
-            this.gbx_serviceTool.TabIndex = 2;
             this.gbx_serviceTool.TabStop = false;
-            this.gbx_serviceTool.Text = "宿主服务控制栏";
+            this.toolTip.SetToolTip(this.gbx_serviceTool, resources.GetString("gbx_serviceTool.ToolTip"));
             // 
             // btn_uninstallSvc
             // 
-            this.btn_uninstallSvc.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_uninstallSvc.Location = new System.Drawing.Point(23, 107);
+            resources.ApplyResources(this.btn_uninstallSvc, "btn_uninstallSvc");
             this.btn_uninstallSvc.Name = "btn_uninstallSvc";
-            this.btn_uninstallSvc.Size = new System.Drawing.Size(75, 23);
-            this.btn_uninstallSvc.TabIndex = 0;
             this.btn_uninstallSvc.TabStop = false;
-            this.btn_uninstallSvc.Text = "卸载服务";
+            this.toolTip.SetToolTip(this.btn_uninstallSvc, resources.GetString("btn_uninstallSvc.ToolTip"));
             this.btn_uninstallSvc.UseVisualStyleBackColor = true;
             this.btn_uninstallSvc.Click += new System.EventHandler(this.btn_uninstallSvc_Click);
             // 
             // btn_stopSvc
             // 
-            this.btn_stopSvc.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_stopSvc.Location = new System.Drawing.Point(23, 78);
+            resources.ApplyResources(this.btn_stopSvc, "btn_stopSvc");
             this.btn_stopSvc.Name = "btn_stopSvc";
-            this.btn_stopSvc.Size = new System.Drawing.Size(75, 23);
-            this.btn_stopSvc.TabIndex = 0;
             this.btn_stopSvc.TabStop = false;
-            this.btn_stopSvc.Text = "停止服务";
+            this.toolTip.SetToolTip(this.btn_stopSvc, resources.GetString("btn_stopSvc.ToolTip"));
             this.btn_stopSvc.UseVisualStyleBackColor = true;
             this.btn_stopSvc.Click += new System.EventHandler(this.btn_stopSvc_Click);
             // 
             // btn_startSvc
             // 
-            this.btn_startSvc.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_startSvc.Location = new System.Drawing.Point(22, 49);
+            resources.ApplyResources(this.btn_startSvc, "btn_startSvc");
             this.btn_startSvc.Name = "btn_startSvc";
-            this.btn_startSvc.Size = new System.Drawing.Size(75, 23);
-            this.btn_startSvc.TabIndex = 0;
             this.btn_startSvc.TabStop = false;
-            this.btn_startSvc.Text = "启动服务";
+            this.toolTip.SetToolTip(this.btn_startSvc, resources.GetString("btn_startSvc.ToolTip"));
             this.btn_startSvc.UseVisualStyleBackColor = true;
             this.btn_startSvc.Click += new System.EventHandler(this.btn_startSvc_Click);
             // 
             // btn_installSvc
             // 
-            this.btn_installSvc.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btn_installSvc.Location = new System.Drawing.Point(22, 20);
+            resources.ApplyResources(this.btn_installSvc, "btn_installSvc");
             this.btn_installSvc.Name = "btn_installSvc";
-            this.btn_installSvc.Size = new System.Drawing.Size(75, 23);
-            this.btn_installSvc.TabIndex = 0;
             this.btn_installSvc.TabStop = false;
-            this.btn_installSvc.Text = "安装服务";
+            this.toolTip.SetToolTip(this.btn_installSvc, resources.GetString("btn_installSvc.ToolTip"));
             this.btn_installSvc.UseVisualStyleBackColor = true;
             this.btn_installSvc.Click += new System.EventHandler(this.btn_installSvc_Click);
             // 
             // lb_version
             // 
-            this.lb_version.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.lb_version, "lb_version");
             this.lb_version.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lb_version.Location = new System.Drawing.Point(659, 462);
             this.lb_version.Name = "lb_version";
-            this.lb_version.Size = new System.Drawing.Size(117, 20);
-            this.lb_version.TabIndex = 0;
-            this.lb_version.Text = "1.0.0.0";
-            this.lb_version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip.SetToolTip(this.lb_version, resources.GetString("lb_version.ToolTip"));
             this.lb_version.Click += new System.EventHandler(this.about_click);
             this.lb_version.MouseEnter += new System.EventHandler(this.about_enter);
             // 
             // lb_author
             // 
-            this.lb_author.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            resources.ApplyResources(this.lb_author, "lb_author");
             this.lb_author.ForeColor = System.Drawing.SystemColors.ControlDark;
-            this.lb_author.Location = new System.Drawing.Point(659, 440);
             this.lb_author.Name = "lb_author";
-            this.lb_author.Size = new System.Drawing.Size(117, 20);
-            this.lb_author.TabIndex = 0;
-            this.lb_author.Text = "By:侯龙超";
-            this.lb_author.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.toolTip.SetToolTip(this.lb_author, resources.GetString("lb_author.ToolTip"));
             this.lb_author.Click += new System.EventHandler(this.about_click);
             this.lb_author.MouseEnter += new System.EventHandler(this.about_enter);
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(788, 491);
             this.Controls.Add(this.lb_author);
             this.Controls.Add(this.lb_version);
             this.Controls.Add(this.gbx_serviceTool);
             this.Controls.Add(this.gbx_logTool);
             this.Controls.Add(this.gbx_jobTool);
             this.Controls.Add(this.pl_main);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(804, 525);
             this.Name = "MainForm";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "任务调度管理 | ";
+            this.toolTip.SetToolTip(this, resources.GetString("$this.ToolTip"));
             this.Load += new System.EventHandler(this.MainForm_Load);
-            this.pl_main.ResumeLayout(false);
             this.spl_main.Panel1.ResumeLayout(false);
             this.spl_main.Panel2.ResumeLayout(false);
             this.spl_main.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spl_main)).EndInit();
             this.spl_main.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgv_data)).EndInit();
+            this.pl_main.ResumeLayout(false);
             this.gbx_jobTool.ResumeLayout(false);
             this.gbx_logTool.ResumeLayout(false);
             this.gbx_logTool.PerformLayout();
@@ -420,6 +353,11 @@
         private System.Windows.Forms.Button btn_startSvc;
         private System.Windows.Forms.Button btn_refreshJobs;
         private System.Windows.Forms.TextBox txt_log;
+        private System.Windows.Forms.Label lb_version;
+        private System.Windows.Forms.Button btn_clearLog;
+        private System.Windows.Forms.Label lb_author;
+        private System.Windows.Forms.CheckBox cbx_wordWrap;
+        private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_id;
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_name;
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_type;
@@ -428,11 +366,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_nextTime;
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_enable;
         private System.Windows.Forms.DataGridViewTextBoxColumn cln_state;
-        private System.Windows.Forms.Label lb_version;
-        private System.Windows.Forms.Button btn_clearLog;
-        private System.Windows.Forms.Label lb_author;
-        private System.Windows.Forms.CheckBox cbx_wordWrap;
-        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 

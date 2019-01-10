@@ -22,8 +22,8 @@ namespace HlcJobService
 
             m_service = new ServiceHost(typeof(JobManagerService), new Uri(Constant.NetNamePipeHost));
             m_service.AddServiceEndpoint(typeof(IJobManagerService), new NetNamedPipeBinding(), "");
-            m_service.Opened += (sender, args) => { m_logger.Info("交互服务已打开"); };
-            m_service.Closed += (sender, args) => { m_logger.Info("交互服务已关闭"); };
+            m_service.Opened += (sender, args) => { m_logger.Info("Control Service Opened"); };
+            m_service.Closed += (sender, args) => { m_logger.Info("Control Service Closed"); };
         }
 
         /// <summary>
@@ -31,13 +31,13 @@ namespace HlcJobService
         /// </summary>
         internal void Start()
         {
-            m_logger.Info("服务启动中...");
+            m_logger.Info("Host Service Starting...");
 
             m_service.Open();
 
             JobManager.Instance.LoadAllScheduler();
 
-            m_logger.Info("服务已启动。");
+            m_logger.Info("Host Service Started。");
         }
 
         /// <summary>
@@ -45,12 +45,12 @@ namespace HlcJobService
         /// </summary>
         internal void Stop()
         {
-            m_logger.Info("服务停止中...");
+            m_logger.Info("Host Service Stopping...");
 
             JobManager.Instance.StopScheduler();
             m_service.Close();
 
-            m_logger.Info("服务已停止。");
+            m_logger.Info("Host Service Stopped。");
         }
 
         public void Dispose()

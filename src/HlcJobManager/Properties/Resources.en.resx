@@ -122,132 +122,123 @@
     <value>..\Resources\help_16px.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NotFoundService" xml:space="preserve">
-    <value>未找到服务</value>
+    <value>Not Found Service</value>
   </data>
   <data name="PleaseInstallService" xml:space="preserve">
-    <value>请先安装服务</value>
+    <value>Please Install Service</value>
   </data>
   <data name="MessageBox_Title_Information" xml:space="preserve">
-    <value>提示</value>
+    <value>Information</value>
   </data>
   <data name="PleaseStartService" xml:space="preserve">
-    <value>请先启动服务</value>
+    <value>Please Start Service</value>
   </data>
   <data name="Comfirm_DeleteJob__jobname" xml:space="preserve">
-    <value>确定要删除任务【{0}】吗？</value>
+    <value>Confirm Delete Job【{0}】？</value>
   </data>
   <data name="ServiceError" xml:space="preserve">
-    <value>服务错误</value>
+    <value>Service Error</value>
   </data>
   <data name="ServiceInstalling" xml:space="preserve">
-    <value>服务安装中</value>
+    <value>Service Installing</value>
   </data>
   <data name="ServiceNotFound" xml:space="preserve">
-    <value>未发现服务</value>
+    <value>Service Not Found</value>
   </data>
   <data name="ServiceRunning" xml:space="preserve">
-    <value>服务正在运行</value>
+    <value>Service Running</value>
   </data>
   <data name="ServiceStarting" xml:space="preserve">
-    <value>服务启动中</value>
+    <value>Service Starting</value>
   </data>
   <data name="ServiceStoped" xml:space="preserve">
-    <value>服务未运行</value>
+    <value>Service Stoped</value>
   </data>
   <data name="ServiceStopping" xml:space="preserve">
-    <value>服务停止中</value>
+    <value>Service Stopping</value>
   </data>
   <data name="ServiceSuspend" xml:space="preserve">
-    <value>服务被挂起</value>
+    <value>Service Suspend</value>
   </data>
   <data name="ServiceSuspending" xml:space="preserve">
-    <value>服务暂停中</value>
+    <value>Service Suspending</value>
   </data>
   <data name="ServiceUninstalling" xml:space="preserve">
-    <value>服务卸载中</value>
+    <value>Service Uninstall</value>
   </data>
   <data name="UnknownState" xml:space="preserve">
-    <value>未知状态</value>
+    <value>Unknown State</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>禁用</value>
+    <value>Disable</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>启用</value>
+    <value>Enable</value>
   </data>
   <data name="JobEditForm_Lable_dllPath" xml:space="preserve">
-    <value>dll路径：</value>
+    <value>dll Path：</value>
   </data>
   <data name="JobEditForm_Lable_exePath" xml:space="preserve">
-    <value>exe路径：</value>
+    <value>exe Path：</value>
   </data>
   <data name="JobEditForm_Lable_workPath" xml:space="preserve">
-    <value>工作目录：</value>
+    <value>Work Path：</value>
   </data>
   <data name="JobEditForm_PleaseSelectWorkPath" xml:space="preserve">
-    <value>选择工作目录</value>
+    <value>Please Select Work Path</value>
   </data>
   <data name="JobEditForm_CronErrorMessage" xml:space="preserve">
-    <value>调度计划格式有误，必须为6位或7位,或一次性服务任务'-'</value>
+    <value>Cron Error，Must be 6 or 7 bites, or service cron '-'</value>
   </data>
   <data name="JobEditForm_WorkPathNotExist" xml:space="preserve">
-    <value>工作目录不存在</value>
+    <value>Work Path Not Exist</value>
   </data>
   <data name="JobEditForm_WorkFileNotExist" xml:space="preserve">
-    <value>工作文件不存在</value>
+    <value>Work File Not Exist</value>
   </data>
   <data name="JobEditForm_NoCmd" xml:space="preserve">
-    <value>无cmd命令</value>
-  </data>
-  <data name="ServiceExisted" xml:space="preserve">
-    <value>服务已存在</value>
+    <value>No cmd</value>
   </data>
   <data name="Blocked" xml:space="preserve">
-    <value>锁定</value>
+    <value>Blocked</value>
   </data>
   <data name="Complete" xml:space="preserve">
-    <value>完成</value>
+    <value>Complete</value>
   </data>
   <data name="Delete" xml:space="preserve">
-    <value>删除</value>
+    <value>Delete</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>出错</value>
+    <value>Error</value>
   </data>
   <data name="None" xml:space="preserve">
-    <value>无</value>
+    <value>None</value>
   </data>
   <data name="Normal" xml:space="preserve">
-    <value>正常</value>
+    <value>Normal</value>
   </data>
   <data name="OpenWorkFile" xml:space="preserve">
-    <value>打开文件路径</value>
+    <value>Open Path</value>
   </data>
   <data name="OpenWorkPath" xml:space="preserve">
-    <value>打开工作目录</value>
+    <value>Open Path</value>
   </data>
   <data name="Paused" xml:space="preserve">
-    <value>暂停</value>
-  </data>
-  <data name="Confirm_StopHost" xml:space="preserve">
-    <value>确定要停止宿主服务（将会关闭所有任务）？</value>
-  </data>
-  <data name="MessageBox_Title_Warning" xml:space="preserve">
-    <value>警告</value>
+    <value>Paused</value>
   </data>
   <data name="Confirm_UninstallHost" xml:space="preserve">
-    <value>确定要卸载宿主服务（将会关闭所有任务）？</value>
+    <value>Uninstall Host Service（all jobs will be closed）？</value>
   </data>
-  <data name="LogView_Show" xml:space="preserve">
-    <value>查看日志</value>
+  <data name="Confirm_StopHost" xml:space="preserve">
+    <value>Stop Host Service（all jobs will be closed）？</value>
   </data>
-  <data name="LogView_Hide" xml:space="preserve">
-    <value>隐藏日志</value>
+  <data name="MessageBox_Title_Warning" xml:space="preserve">
+    <value>Warning</value>
   </data>
   <data name="CronHelp" xml:space="preserve">
-    <value>(-)一个减号，表示一次性服务，只启动一次。
-(0/10 * * * * ?)表示调度计划，每10秒运行一次
-调度计划由7段构成(秒 分 时 日 月 星期 年(可选))
-详细调度计划编写可查阅Quartz的cron表达式"</value>
+    <value>(-) a minus sign, indicating a one-time service, started only once.
+(0/10 * * * *?)Represents the scheduling plan, which is run every 10 seconds
+The schedule consists of 7 segments (minute in seconds, day in month, week in year (optional))
+You can refer to the cron expression of Quartz for detailed scheduling</value>
   </data>
 </root>

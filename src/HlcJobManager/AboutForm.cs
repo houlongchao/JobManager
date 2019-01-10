@@ -21,7 +21,7 @@ namespace HlcJobManager
             InitializeComponent();
         }
 
-        public static void Show()
+        public new static void Show()
         {
             if (_instance == null || _instance.IsDisposed)
             {
