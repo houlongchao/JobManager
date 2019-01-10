@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -815,6 +816,16 @@ namespace HlcJobManager
                 });
         }
         #endregion
+
+        private void about_click(object sender, EventArgs e)
+        {
+            AboutForm.Show();
+        }
+
+        private void about_enter(object sender, EventArgs e)
+        {
+            toolTip.Show("About", (IWin32Window) sender);
+        }
     }
 
     enum ServerStatus

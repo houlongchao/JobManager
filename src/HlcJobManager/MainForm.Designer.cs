@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pl_main = new System.Windows.Forms.Panel();
             this.spl_main = new System.Windows.Forms.SplitContainer();
@@ -55,6 +56,7 @@
             this.btn_installSvc = new System.Windows.Forms.Button();
             this.lb_version = new System.Windows.Forms.Label();
             this.lb_author = new System.Windows.Forms.Label();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.pl_main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.spl_main)).BeginInit();
             this.spl_main.Panel1.SuspendLayout();
@@ -354,6 +356,8 @@
             this.lb_version.TabIndex = 0;
             this.lb_version.Text = "1.0.0.0";
             this.lb_version.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lb_version.Click += new System.EventHandler(this.about_click);
+            this.lb_version.MouseEnter += new System.EventHandler(this.about_enter);
             // 
             // lb_author
             // 
@@ -365,6 +369,8 @@
             this.lb_author.TabIndex = 0;
             this.lb_author.Text = "By:侯龙超";
             this.lb_author.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lb_author.Click += new System.EventHandler(this.about_click);
+            this.lb_author.MouseEnter += new System.EventHandler(this.about_enter);
             // 
             // MainForm
             // 
@@ -426,6 +432,7 @@
         private System.Windows.Forms.Button btn_clearLog;
         private System.Windows.Forms.Label lb_author;
         private System.Windows.Forms.CheckBox cbx_wordWrap;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 
